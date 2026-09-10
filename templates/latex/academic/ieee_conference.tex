@@ -1,0 +1,64 @@
+\documentclass[conference]{IEEEtran}
+
+% Packages
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+% All foreground text colors verified against white (#FFFFFF) background per WCAG 2.1.
+\definecolor{paperbackground}{RGB}{248, 248, 244}  % Background color (not text)
+\pagecolor{paperbackground}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{microtype}
+
+% Widow/orphan control
+\widowpenalty=10000
+\clubpenalty=10000
+\brokenpenalty=10000
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,  % black: 21.00:1 - AA/AAA Pass
+    citecolor=black,  % black: 21.00:1 - AA/AAA Pass
+    urlcolor=blue,    % blue: 8.59:1 - AA/AAA Pass
+    pdflang=en-US
+}
+
+\begin{document}
+
+% Title
+\title{{{TITLE}}}
+
+% Author
+\author{
+    \IEEEauthorblockN{{{AUTHOR}}}
+    \IEEEauthorblockA{
+        {{INSTITUTION}}
+    }
+}
+
+\maketitle
+
+% Abstract
+\begin{abstract}
+{{ABSTRACT}}
+\end{abstract}
+
+% Keywords
+\begin{IEEEkeywords}
+{{KEYWORDS}}
+\end{IEEEkeywords}
+
+% Main content
+{{SECTIONS}}
+
+% Bibliography
+\bibliographystyle{IEEEtran}
+\bibliography{{{BIBLIOGRAPHY_FILE}}}
+
+\end{document}

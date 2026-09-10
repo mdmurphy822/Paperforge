@@ -1,0 +1,563 @@
+\documentclass[11pt,a4paper]{article}
+
+% =============================================================================
+% PACKAGES
+% =============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo}          % Palatino for text and math
+\usepackage[scaled=0.95]{helvet}
+\usepackage{courier}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{booktabs}
+\usepackage[margin=1in,marginparwidth=1.2in,marginparsep=0.15in]{geometry}
+\usepackage{microtype}
+\usepackage{lettrine}
+\usepackage[font=small,labelfont=bf,textfont=it]{caption}
+\usepackage{marginnote}
+\usepackage{fancyhdr}
+\usepackage{tocloft}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,theorems,breakable}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{colortbl}
+\usepackage{soul}
+\usepackage{etoolbox}
+\usepackage{needspace}
+
+% =============================================================================
+% DARK MODE COLOR PALETTE
+% =============================================================================
+% All foreground colors verified WCAG AA (>=4.5:1) against #2D2D2D background.
+% AAA = >=7:1. Ratios computed per WCAG 2.1 relative luminance formula.
+\definecolor{pageblack}{HTML}{2D2D2D}       % Dark charcoal background
+\definecolor{textwhite}{HTML}{F0F0F0}       % Body text          — 12.08:1 (AAA)
+\definecolor{silver}{HTML}{D0D0D0}          % Section headers    —  8.93:1 (AAA)
+\definecolor{steel}{HTML}{B8B8C0}           % Subsection headers —  6.99:1 (AA)
+\definecolor{dimsilver}{HTML}{B0B0B8}        % Footnotes/running heads — 6.39:1 (AA)
+\definecolor{deepcharcoal}{HTML}{242424}     % Box backgrounds (not text)
+\definecolor{goldaccent}{HTML}{E0C04A}       % Drop caps/ornaments — 7.74:1 (AAA)
+\definecolor{steelblue}{HTML}{7BAFD4}        % Links/citations    — 5.85:1 (AA)
+\definecolor{mutedgold}{HTML}{D4B040}        % Rules/borders      — 6.61:1 (AA)
+
+% =============================================================================
+% APPLY DARK MODE
+% =============================================================================
+\pagecolor{pageblack}
+\color{textwhite}
+
+% =============================================================================
+% PARAGRAPH FORMATTING
+% =============================================================================
+\setlength{\parskip}{0.75\baselineskip plus 3pt minus 2pt}
+\setlength{\parindent}{1.5em}
+\linespread{1.15}
+
+% Widow/orphan control
+\widowpenalty=10000
+\clubpenalty=10000
+\brokenpenalty=10000
+
+% =============================================================================
+% FLOAT PLACEMENT
+% =============================================================================
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.85}
+\renewcommand{\textfraction}{0.15}
+\renewcommand{\floatpagefraction}{0.7}
+\setlength{\floatsep}{12pt plus 4pt minus 2pt}
+\setlength{\textfloatsep}{16pt plus 4pt minus 3pt}
+\setlength{\intextsep}{12pt plus 4pt minus 2pt}
+
+% =============================================================================
+% LIST FORMATTING
+% =============================================================================
+\setlist{itemsep=4pt, parsep=2pt, topsep=8pt}
+\setlist[itemize]{label={\textcolor{silver}{\textbullet}}}
+\setlist[description]{
+    font=\normalfont\bfseries\color{silver},
+    itemsep=6pt,
+    parsep=2pt,
+    leftmargin=2em,
+    style=nextline
+}
+
+% =============================================================================
+% TABLE FORMATTING
+% =============================================================================
+\arrayrulecolor{dimsilver}
+
+% =============================================================================
+% HYPERREF
+% =============================================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=steelblue,
+    citecolor=steelblue,
+    urlcolor=steelblue,
+    pdflang=en-US
+}
+
+% =============================================================================
+% TABLE OF CONTENTS STYLING
+% =============================================================================
+\setlength{\cftbeforesecskip}{6pt}
+\setlength{\cftbeforesubsecskip}{3pt}
+\renewcommand{\cftsecleader}{\textcolor{dimsilver}{\cftdotfill{\cftdotsep}}}
+\renewcommand{\cftsubsecleader}{\textcolor{dimsilver}{\cftdotfill{\cftdotsep}}}
+\renewcommand{\cftsecfont}{\color{textwhite}}
+\renewcommand{\cftsecpagefont}{\color{textwhite}}
+\renewcommand{\cftsubsecfont}{\color{steel}}
+\renewcommand{\cftsubsecpagefont}{\color{steel}}
+\renewcommand{\cfttoctitlefont}{\Large\bfseries\color{silver}}
+
+% =============================================================================
+% HEADER/FOOTER
+% =============================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textcolor{dimsilver}{\small {{TITLE}}}}
+\fancyhead[R]{\textcolor{dimsilver}{\small\thepage}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancypagestyle{plain}{%
+    \fancyhf{}%
+    \fancyfoot[C]{\textcolor{silver}{\thepage}}%
+    \renewcommand{\headrulewidth}{0pt}%
+    \renewcommand{\footrulewidth}{0pt}%
+}
+
+% =============================================================================
+% SECTION FORMATTING
+% =============================================================================
+% Orphan guards: \needspace reserves the heading + first lines of its body so a
+% heading can never be stranded alone at the foot of a page (recurring issue).
+\titleformat{\section}{\needspace{4\baselineskip}\Large\bfseries\color{silver}}{\thesection}{1em}{}
+\titleformat{\subsection}{\needspace{3\baselineskip}\large\bfseries\color{steel}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\needspace{2.5\baselineskip}\normalsize\bfseries\color{steel}}{\thesubsubsection}{1em}{}
+
+\titlespacing*{\section}{0pt}{1.5\baselineskip plus 4pt minus 2pt}{0.75\baselineskip plus 2pt minus 1pt}
+\titlespacing*{\subsection}{0pt}{1.25\baselineskip plus 3pt minus 2pt}{0.5\baselineskip plus 2pt minus 1pt}
+\titlespacing*{\subsubsection}{0pt}{1\baselineskip plus 2pt minus 1pt}{0.4\baselineskip plus 1pt minus 1pt}
+
+% =============================================================================
+% DROP CAPS
+% =============================================================================
+\setcounter{DefaultLines}{2}
+\renewcommand{\DefaultLoversize}{0.1}
+\renewcommand{\DefaultNindent}{0pt}
+\renewcommand{\LettrineFontHook}{\color{goldaccent}\bfseries}
+
+% =============================================================================
+% CAPTION CONFIGURATION
+% =============================================================================
+\captionsetup{skip=8pt}
+\captionsetup[figure]{position=below}
+\captionsetup[table]{position=above}
+\DeclareCaptionFont{steel}{\color{steel}}
+\captionsetup{labelfont={bf,steel},textfont={it,steel}}
+
+% =============================================================================
+% CODE LISTINGS
+% =============================================================================
+\lstset{
+    basicstyle=\ttfamily\small\color{textwhite},
+    keywordstyle=\color{steelblue}\bfseries,
+    commentstyle=\color{dimsilver}\itshape,
+    stringstyle=\color{goldaccent},
+    numbers=left,
+    numberstyle=\tiny\color{dimsilver},
+    numbersep=8pt,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{dimsilver},
+    backgroundcolor=\color{deepcharcoal},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    captionpos=b,
+    aboveskip=\baselineskip,
+    belowskip=\baselineskip
+}
+
+% =============================================================================
+% CUSTOM ENVIRONMENTS
+% =============================================================================
+
+% Key point callout box
+\newtcolorbox{keypoint}{
+    colback=deepcharcoal,
+    colframe=dimsilver,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=2pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={\textcolor{goldaccent}{\small\bfseries Key Point}},
+    fonttitle=\bfseries\small,
+    coltitle=goldaccent,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=dimsilver,boxrule=0.5pt,arc=1pt}
+}
+
+% Executive summary / abstract box — enhanced with skins
+\newtcolorbox{styledabstract}{
+    enhanced,
+    colback=deepcharcoal,
+    colframe=mutedgold,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=3pt,
+    left=14pt,
+    right=14pt,
+    top=10pt,
+    bottom=10pt,
+    before skip=12pt,
+    after skip=12pt,
+    borderline west={3pt}{0pt}{mutedgold},
+    shadow={2mm}{-2mm}{0mm}{fill=black!40},
+    title={\centering\small\bfseries\textcolor{goldaccent}{\letterspacedtext{EXECUTIVE SUMMARY}}},
+    fonttitle=\bfseries\small,
+    coltitle=goldaccent,
+    attach boxed title to top center={yshift=-2mm},
+    boxed title style={
+        colback=deepcharcoal,
+        colframe=mutedgold,
+        boxrule=0.5pt,
+        arc=2pt,
+        left=8pt,
+        right=8pt
+    },
+    after title={\vspace{4pt}\par\textcolor{mutedgold}{\rule{0.3\textwidth}{0.4pt}\quad$\diamond$\quad\rule{0.3\textwidth}{0.4pt}}\par\vspace{4pt}},
+    halign=center
+}
+
+% Block quote with silver left rule
+\newtcolorbox{blockquote}{
+    blanker,
+    borderline west={3pt}{0pt}{dimsilver},
+    left=12pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    coltext=steel
+}
+
+% Legal citation highlight box
+\newtcolorbox{legalcite}{
+    colback=deepcharcoal,
+    colframe=mutedgold,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=1pt,
+    left=8pt,
+    right=8pt,
+    top=6pt,
+    bottom=6pt,
+    before skip=0.5\baselineskip,
+    after skip=0.5\baselineskip
+}
+
+% Highlighted equation callout box
+\newtcolorbox{equationbox}[1][]{
+    enhanced,
+    colback=deepcharcoal,
+    colframe=mutedgold,
+    coltext=textwhite,
+    boxrule=0.8pt,
+    arc=2pt,
+    left=12pt,
+    right=12pt,
+    top=10pt,
+    bottom=10pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    shadow={1mm}{-1mm}{0mm}{fill=black!30},
+    #1
+}
+
+% Variable definition list box
+\newtcolorbox{vardefs}[1][]{
+    enhanced,
+    colback=deepcharcoal,
+    colframe=dimsilver,
+    coltext=textwhite,
+    boxrule=0.4pt,
+    arc=2pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={\small\bfseries\textcolor{silver}{Parameter Definitions}},
+    fonttitle=\bfseries\small,
+    coltitle=silver,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=dimsilver,boxrule=0.4pt,arc=1pt},
+    #1
+}
+
+% Key result highlight box (gold left bar)
+\newtcolorbox{resultbox}{
+    blanker,
+    borderline west={3pt}{0pt}{goldaccent},
+    left=12pt,
+    top=6pt,
+    bottom=6pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    coltext=textwhite
+}
+
+% =============================================================================
+% UDL ENVIRONMENTS (Universal Design for Learning)
+% Grounded in UDL Guidelines 1-3, Cognitive Load Theory, Mayer's Principles
+% =============================================================================
+
+% Section Overview — Advance Organizer (UDL Guideline 3.1: Activate prior knowledge)
+\newtcolorbox{sectionoverview}{
+    blanker,
+    borderline west={3pt}{0pt}{steelblue},
+    left=12pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    coltext=steel
+}
+
+% Section Summary — Post-reading consolidation (UDL Guideline 3.4: Maximize generalization)
+\newtcolorbox{sectionsummary}{
+    blanker,
+    borderline west={3pt}{0pt}{mutedgold},
+    left=12pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    coltext=textwhite
+}
+
+% Key Vocabulary (UDL Guideline 2.1: Clarify vocabulary and symbols)
+\newtcolorbox{keyvocabulary}{
+    blanker,
+    borderline west={2pt}{0pt}{steelblue},
+    left=12pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=0.75\baselineskip,
+    after skip=0.75\baselineskip,
+    coltext=textwhite
+}
+
+% Reflection Prompt — Metacognitive self-monitoring (Cognitive Load Theory: germane processing)
+\newtcolorbox{reflectionprompt}{
+    blanker,
+    borderline west={2pt}{0pt}{dimsilver},
+    left=12pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    coltext=steel,
+    before upper={\textcolor{goldaccent}{\small\bfseries Pause and Consider}\par\smallskip\itshape}
+}
+
+% =============================================================================
+% DEFINITION & IDEA PRESENTATION ENVIRONMENTS
+% Grounded in CLT (Mayer's Signaling/Segmenting), UDL 2.1/2.4/3.3
+% =============================================================================
+
+% Formal Definition — numbered per section (UDL Guideline 2.1: Clarify vocabulary)
+% Design: dictionary-entry feel — open left-border, sharp corners, inline title with separator
+\newtcolorbox[auto counter, number within=section]{definition}[1]{%
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=deepcharcoal,
+    coltext=textwhite,
+    boxrule=0pt,
+    arc=0pt,
+    borderline west={4pt}{0pt}{steelblue},
+    left=14pt,
+    right=10pt,
+    top=10pt,
+    bottom=8pt,
+    before skip=1.2\baselineskip,
+    after skip=1.2\baselineskip,
+    before upper={\textcolor{steelblue}{\small$\triangleright$\enspace\textsc{Definition}~\thetcbcounter\enspace---\enspace\textbf{#1}}\par\vspace{4pt}\textcolor{steelblue!40!deepcharcoal}{\rule{\dimexpr\linewidth}{0.3pt}}\par\vspace{4pt}}
+}
+
+% Principle / Law — numbered per section (Mayer's Signaling Principle)
+% Design: authoritative/foundational — enclosed frame, gold top accent, heavier spacing
+\newtcolorbox[auto counter, number within=section]{principle}[1]{%
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=mutedgold,
+    coltext=textwhite,
+    boxrule=0.8pt,
+    arc=2pt,
+    borderline north={2.5pt}{0pt}{goldaccent},
+    left=12pt,
+    right=10pt,
+    top=12pt,
+    bottom=10pt,
+    before skip=1.4\baselineskip,
+    after skip=1.4\baselineskip,
+    before upper={\textcolor{goldaccent}{\normalsize$\blacklozenge$\enspace\textbf{Principle~\thetcbcounter\enspace---\enspace#1}}\par\vspace{4pt}\textcolor{mutedgold!40!deepcharcoal}{\rule{\dimexpr\linewidth}{0.3pt}}\par\vspace{4pt}}
+}
+
+% Worked Example — numbered per section (Cognitive Load: segmenting)
+\newtcolorbox[auto counter, number within=section]{example}[1][]{%
+    blanker,
+    borderline west={3pt}{0pt}{silver},
+    left=12pt,
+    top=6pt,
+    bottom=6pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    coltext=textwhite,
+    before upper={\textcolor{silver}{\small\bfseries Example~\thetcbcounter\ifstrempty{#1}{}{ --- #1}}\par\smallskip}
+}
+
+% Aside — tangential content (Cognitive Load: reduce extraneous)
+\newtcolorbox{aside}[1][]{%
+    enhanced,
+    colback=deepcharcoal,
+    colframe=dimsilver,
+    coltext=steel,
+    boxrule=0.3pt,
+    arc=2pt,
+    left=10pt,
+    right=10pt,
+    top=6pt,
+    bottom=6pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    fontupper=\small,
+    title={\textcolor{dimsilver}{\small\itshape \ifstrempty{#1}{Aside}{#1}}},
+    fonttitle=\itshape\small,
+    coltitle=dimsilver,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=dimsilver,boxrule=0.3pt,arc=1pt}
+}
+
+% Notation alias for notation/vardefs interoperability
+\newenvironment{notation}[1][]{\begin{vardefs}[#1]}{\end{vardefs}}
+
+% First-use term highlight (Mayer's Signaling Principle)
+\newcommand{\term}[1]{\textbf{\textcolor{silver}{#1}}}
+
+% =============================================================================
+% ORNAMENTS
+% =============================================================================
+\newcommand{\sectionornament}{%
+    \vspace{0.5\baselineskip}%
+    \begin{center}%
+    \textcolor{dimsilver}{$\ast$\quad$\ast$\quad$\ast$}%
+    \end{center}%
+    \vspace{0.5\baselineskip}%
+}
+
+\newcommand{\titleornament}{%
+    \textcolor{mutedgold}{\rule{0.2\textwidth}{0.5pt}\quad$\diamond$\quad\rule{0.2\textwidth}{0.5pt}}%
+}
+
+% =============================================================================
+% MARGIN NOTES
+% =============================================================================
+\renewcommand*{\marginfont}{\footnotesize\itshape\color{dimsilver}}
+
+% =============================================================================
+% LEGAL CITATION HELPERS
+% =============================================================================
+\newcommand{\usc}[2]{#1~U.S.C.~\S~#2}
+\newcommand{\cfr}[2]{#1~C.F.R.~\S~#2}
+\newcommand{\casename}[1]{\textit{#1}}
+\sodef\letterspacedtext{}{.15em}{.6em}{.8em}
+
+% =============================================================================
+% DOCUMENT BEGIN
+% =============================================================================
+\begin{document}
+
+% ===================== TITLE PAGE =====================
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+
+    {\textcolor{mutedgold}{\rule{\textwidth}{1.5pt}}}
+    \vspace{0.3cm}
+
+    {\Huge\bfseries\color{silver} {{TITLE}} \par}
+
+    \vspace{0.3cm}
+    {\textcolor{mutedgold}{\rule{0.5\textwidth}{0.5pt}}}
+
+    \vspace{0.5cm}
+
+    {\large\color{steel}\itshape {{SUBTITLE}} \par}
+
+    \vspace{1cm}
+
+    {\Large\color{dimsilver} Technical Whitepaper \par}
+
+    \vspace{2cm}
+
+    {\Large\color{textwhite} {{AUTHOR}} \par}
+
+    \vfill
+
+    {\large\color{dimsilver} {{DATE}} \par}
+
+    \vspace{0.5cm}
+    {\textcolor{mutedgold}{\rule{\textwidth}{1.5pt}}}
+
+\end{titlepage}
+
+% ===================== FRONT MATTER =====================
+\pagenumbering{roman}
+
+% Executive Summary
+\section*{Executive Summary}
+\addcontentsline{toc}{section}{Executive Summary}
+
+{{ABSTRACT}}
+
+\sectionornament
+
+% Table of Contents
+{
+\hypersetup{linkcolor=steelblue}
+\tableofcontents
+}
+\newpage
+
+% ===================== MAIN CONTENT =====================
+\pagenumbering{arabic}
+
+{{SECTIONS}}
+
+% ===================== BIBLIOGRAPHY =====================
+\newpage
+\bibliographystyle{IEEEtran}
+\bibliography{{{BIBLIOGRAPHY_FILE}}}
+
+\end{document}

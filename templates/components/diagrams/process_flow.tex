@@ -1,0 +1,175 @@
+% process_flow.tex - Process flow diagram macros for Paperforge
+% Requires: _colors.tex, _styles.tex loaded first
+%
+% Macros provided:
+%   \processflow{step1}{step2}{step3}           - 3-step horizontal flow
+%   \processflowfour{s1}{s2}{s3}{s4}            - 4-step horizontal flow
+%   \processflowvertical{step1}{step2}{step3}   - 3-step vertical flow
+%   \processflowlabeled{s1}{l1}{s2}{l2}{s3}     - Flow with connector labels
+%   \processflowdark{step1}{step2}{step3}       - Dark theme 3-step flow
+%
+% Cognitive load: Maximum 4 steps per diagram (RAG principle)
+
+% ============================================================================
+% THREE-STEP HORIZONTAL FLOW
+% ============================================================================
+% Usage: \processflow{Input}{Process}{Output}
+\newcommand{\processflow}[3]{%
+\begin{center}
+\begin{tikzpicture}[node distance=3.5cm]
+    \node[diagram box] (a) {#1};
+    \node[diagram box, right=of a] (b) {#2};
+    \node[diagram box, right=of b] (c) {#3};
+    \draw[diagram arrow] (a) -- (b);
+    \draw[diagram arrow] (b) -- (c);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% FOUR-STEP HORIZONTAL FLOW
+% ============================================================================
+% Usage: \processflowfour{Step 1}{Step 2}{Step 3}{Step 4}
+\newcommand{\processflowfour}[4]{%
+\begin{center}
+\begin{tikzpicture}[node distance=2.8cm]
+    \node[diagram box, minimum width=2cm] (a) {#1};
+    \node[diagram box, minimum width=2cm, right=of a] (b) {#2};
+    \node[diagram box, minimum width=2cm, right=of b] (c) {#3};
+    \node[diagram box, minimum width=2cm, right=of c] (d) {#4};
+    \draw[diagram arrow] (a) -- (b);
+    \draw[diagram arrow] (b) -- (c);
+    \draw[diagram arrow] (c) -- (d);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% THREE-STEP VERTICAL FLOW
+% ============================================================================
+% Usage: \processflowvertical{Top}{Middle}{Bottom}
+\newcommand{\processflowvertical}[3]{%
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm]
+    \node[diagram box] (a) {#1};
+    \node[diagram box, below=of a] (b) {#2};
+    \node[diagram box, below=of b] (c) {#3};
+    \draw[diagram arrow] (a) -- (b);
+    \draw[diagram arrow] (b) -- (c);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% LABELED FLOW (with connector labels)
+% ============================================================================
+% Usage: \processflowlabeled{Step1}{label1}{Step2}{label2}{Step3}
+\newcommand{\processflowlabeled}[5]{%
+\begin{center}
+\begin{tikzpicture}[node distance=3.5cm]
+    \node[diagram box] (a) {#1};
+    \node[diagram box, right=of a] (b) {#3};
+    \node[diagram box, right=of b] (c) {#5};
+    \draw[diagram arrow] (a) -- node[diagram label above] {#2} (b);
+    \draw[diagram arrow] (b) -- node[diagram label above] {#4} (c);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% DARK THEME THREE-STEP FLOW
+% ============================================================================
+% Usage: \processflowdark{Step1}{Step2}{Step3}
+\newcommand{\processflowdark}[3]{%
+\begin{center}
+\begin{tikzpicture}[node distance=3.5cm]
+    \node[diagram box dark] (a) {#1};
+    \node[diagram box dark, right=of a] (b) {#2};
+    \node[diagram box dark, right=of b] (c) {#3};
+    \draw[diagram arrow dark] (a) -- (b);
+    \draw[diagram arrow dark] (b) -- (c);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% DARK THEME LABELED FLOW
+% ============================================================================
+% Usage: \processflowdarklabeled{Step1}{label1}{Step2}{label2}{Step3}
+\newcommand{\processflowdarklabeled}[5]{%
+\begin{center}
+\begin{tikzpicture}[node distance=3.5cm]
+    \node[diagram box dark] (a) {#1};
+    \node[diagram box dark, right=of a] (b) {#3};
+    \node[diagram box dark, right=of b] (c) {#5};
+    \draw[diagram arrow dark] (a) -- node[diagram label dark, above, midway] {#2} (b);
+    \draw[diagram arrow dark] (b) -- node[diagram label dark, above, midway] {#4} (c);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% CYCLIC FLOW (3 steps in a loop)
+% ============================================================================
+% Usage: \processcycle{Step1}{Step2}{Step3}
+\newcommand{\processcycle}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    \node[diagram box] (a) at (90:2cm) {#1};
+    \node[diagram box] (b) at (210:2cm) {#2};
+    \node[diagram box] (c) at (330:2cm) {#3};
+    \draw[diagram arrow] (a) to[bend right=15] (b);
+    \draw[diagram arrow] (b) to[bend right=15] (c);
+    \draw[diagram arrow] (c) to[bend right=15] (a);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% BRANCHING FLOW (1 to 2)
+% ============================================================================
+% Usage: \processbranch{Start}{Branch A}{Branch B}
+\newcommand{\processbranch}[3]{%
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+    \node[diagram box] (start) {#1};
+    \node[diagram box, below right=1.5cm and 2cm of start] (a) {#2};
+    \node[diagram box, above right=1.5cm and 2cm of start] (b) {#3};
+    \draw[diagram arrow] (start) -- (a);
+    \draw[diagram arrow] (start) -- (b);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% MERGING FLOW (2 to 1)
+% ============================================================================
+% Usage: \processmerge{Input A}{Input B}{Output}
+\newcommand{\processmerge}[3]{%
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+    \node[diagram box] (a) at (0, 1.2) {#1};
+    \node[diagram box] (b) at (0, -1.2) {#2};
+    \node[diagram box] (out) at (4.5, 0) {#3};
+    \draw[diagram arrow] (a) -- (out);
+    \draw[diagram arrow] (b) -- (out);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% FEEDBACK LOOP
+% ============================================================================
+% Usage: \processfeedback{Process}{Feedback}{Output}
+\newcommand{\processfeedback}[3]{%
+\begin{center}
+\begin{tikzpicture}[node distance=3cm]
+    \node[diagram box] (process) {#1};
+    \node[diagram box, right=of process] (output) {#3};
+    \node[diagram box, below=1.5cm of process] (feedback) {#2};
+    \draw[diagram arrow] (process) -- (output);
+    \draw[diagram arrow] (output) |- (feedback);
+    \draw[diagram arrow] (feedback) -- (process);
+\end{tikzpicture}
+\end{center}
+}

@@ -1,0 +1,248 @@
+% flowchart.tex - Flowchart and decision tree macros for Paperforge
+% Requires: _colors.tex, _styles.tex loaded first
+%
+% Macros provided:
+%   \flowchartsimple{start}{process}{end}
+%   \decisiontree{question}{yes-result}{no-result}
+%   \decisiontreetwo{q1}{y1}{n1-q2}{y2}{n2}
+%   \conditionalflow - manual flow construction
+%
+% Shapes: Rectangle (process), Diamond (decision), Pill (terminal)
+
+% ============================================================================
+% SIMPLE FLOWCHART (Start → Process → End)
+% ============================================================================
+% Usage: \flowchartsimple{Start}{Process Step}{End}
+\newcommand{\flowchartsimple}[3]{%
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+    % Start terminal
+    \node[diagram terminal] (start) {#1};
+
+    % Process
+    \node[diagram process, below=of start] (proc) {#2};
+
+    % End terminal
+    \node[diagram terminal, below=of proc] (end) {#3};
+
+    % Arrows
+    \draw[diagram arrow] (start) -- (proc);
+    \draw[diagram arrow] (proc) -- (end);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% BINARY DECISION TREE
+% ============================================================================
+% Usage: \decisiontree{Question?}{Yes Result}{No Result}
+\newcommand{\decisiontree}[3]{%
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm]
+    % Decision diamond
+    \node[diagram decision] (q) {#1};
+
+    % Yes branch (right)
+    \node[diagram box success, right=2.5cm of q] (yes) {#2};
+
+    % No branch (left)
+    \node[diagram box error, left=2.5cm of q] (no) {#3};
+
+    % Arrows with labels
+    \draw[diagram arrow success] (q.east) -- node[above, font=\scriptsize] {Yes} (yes.west);
+    \draw[diagram arrow error] (q.west) -- node[above, font=\scriptsize] {No} (no.east);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% TWO-LEVEL DECISION TREE
+% ============================================================================
+% Usage: \decisiontreetwo{Q1}{Y1}{Q2 (from N1)}{Y2}{N2}
+\newcommand{\decisiontreetwo}[5]{%
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm]
+    % First decision
+    \node[diagram decision] (q1) {#1};
+
+    % Yes result (right)
+    \node[diagram box success, right=2.5cm of q1] (y1) {#2};
+
+    % Second decision (below, from No)
+    \node[diagram decision, below=2cm of q1] (q2) {#3};
+
+    % Second Yes result
+    \node[diagram box success, right=2.5cm of q2] (y2) {#4};
+
+    % Final No result
+    \node[diagram box error, left=2.5cm of q2] (n2) {#5};
+
+    % Arrows
+    \draw[diagram arrow success] (q1.east) -- node[above, font=\scriptsize] {Yes} (y1.west);
+    \draw[diagram arrow] (q1.south) -- node[right, font=\scriptsize] {No} (q2.north);
+    \draw[diagram arrow success] (q2.east) -- node[above, font=\scriptsize] {Yes} (y2.west);
+    \draw[diagram arrow error] (q2.west) -- node[above, font=\scriptsize] {No} (n2.east);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% IF-THEN-ELSE FLOW
+% ============================================================================
+% Usage: \ifthenelse{Condition}{Then Action}{Else Action}
+\newcommand{\ifthenelse}[3]{%
+\begin{center}
+\begin{tikzpicture}[node distance=1.8cm]
+    % Condition diamond
+    \node[diagram decision] (cond) {#1};
+
+    % Then branch (below right)
+    \node[diagram process, below right=1.5cm and 2cm of cond] (then) {#2};
+
+    % Else branch (below left)
+    \node[diagram process, below left=1.5cm and 2cm of cond] (else) {#3};
+
+    % Merge point
+    \node[circle, fill=diagramNeutral, minimum size=6pt, inner sep=0pt, below=3.5cm of cond] (merge) {};
+
+    % Arrows
+    \draw[diagram arrow success] (cond) -| node[near start, above, font=\scriptsize] {True} (then);
+    \draw[diagram arrow error] (cond) -| node[near start, above, font=\scriptsize] {False} (else);
+    \draw[diagram arrow] (then) |- (merge);
+    \draw[diagram arrow] (else) |- (merge);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% LINEAR FLOWCHART (4 steps)
+% ============================================================================
+% Usage: \flowchartlinear{Step1}{Step2}{Step3}{Step4}
+\newcommand{\flowchartlinear}[4]{%
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm]
+    \node[diagram terminal] (s1) {#1};
+    \node[diagram process, below=of s1] (s2) {#2};
+    \node[diagram process, below=of s2] (s3) {#3};
+    \node[diagram terminal, below=of s3] (s4) {#4};
+
+    \draw[diagram arrow] (s1) -- (s2);
+    \draw[diagram arrow] (s2) -- (s3);
+    \draw[diagram arrow] (s3) -- (s4);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% FLOWCHART WITH DATA INPUT
+% ============================================================================
+% Usage: \flowchartdata{Input Data}{Process}{Output Data}
+\newcommand{\flowchartdata}[3]{%
+\begin{center}
+\begin{tikzpicture}[node distance=2cm]
+    % Data input (parallelogram)
+    \node[diagram data] (input) {#1};
+
+    % Process
+    \node[diagram process, below=of input] (proc) {#2};
+
+    % Data output
+    \node[diagram data, below=of proc] (output) {#3};
+
+    % Arrows
+    \draw[diagram arrow] (input) -- (proc);
+    \draw[diagram arrow] (proc) -- (output);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% LOOP FLOWCHART
+% ============================================================================
+% Usage: \flowchartloop{Initialize}{Condition}{Process}{Update}
+\newcommand{\flowchartloop}[4]{%
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm]
+    % Initialize
+    \node[diagram process] (init) {#1};
+
+    % Condition
+    \node[diagram decision, below=of init] (cond) {#2};
+
+    % Process (right)
+    \node[diagram process, right=2.5cm of cond] (proc) {#3};
+
+    % Update (below process)
+    \node[diagram process, below=of proc] (update) {#4};
+
+    % Exit (below condition)
+    \node[diagram terminal, below=2.5cm of cond] (exit) {Exit};
+
+    % Arrows
+    \draw[diagram arrow] (init) -- (cond);
+    \draw[diagram arrow success] (cond.east) -- node[above, font=\scriptsize] {Yes} (proc.west);
+    \draw[diagram arrow] (proc) -- (update);
+    \draw[diagram arrow] (update.west) -| ($(cond.north) + (0, 0.5)$) -- (cond.north);
+    \draw[diagram arrow error] (cond.south) -- node[right, font=\scriptsize] {No} (exit.north);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% SWIMLANE STYLE (2 lanes)
+% ============================================================================
+% Usage: \swimlane{Lane1 Name}{Lane1 Steps}{Lane2 Name}{Lane2 Steps}
+% Note: Steps should be separated by \\ for multi-step lanes
+\newcommand{\swimlane}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Lane 1 header
+    \node[diagram box primary, minimum width=5cm, minimum height=0.8cm] (h1) at (0, 0) {\textbf{#1}};
+
+    % Lane 1 content
+    \node[diagram card, minimum width=5cm, minimum height=2.5cm, below=0pt of h1] (c1) {%
+        \begin{minipage}{4.5cm}
+        \small #2
+        \end{minipage}
+    };
+
+    % Lane 2 header
+    \node[diagram box secondary, minimum width=5cm, minimum height=0.8cm] (h2) at (6, 0) {\textbf{#3}};
+
+    % Lane 2 content
+    \node[diagram card, minimum width=5cm, minimum height=2.5cm, below=0pt of h2] (c2) {%
+        \begin{minipage}{4.5cm}
+        \small #4
+        \end{minipage}
+    };
+
+    % Interaction arrow
+    \draw[diagram arrow, dashed] (c1.east) -- (c2.west);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% DARK THEME DECISION TREE
+% ============================================================================
+% Usage: \decisiontreedark{Question?}{Yes Result}{No Result}
+\newcommand{\decisiontreedark}[3]{%
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm]
+    % Decision diamond
+    \node[diamond, aspect=2, draw=diagramDarkBorder, fill=diagramDarkAccent!30,
+          minimum width=2cm, minimum height=1cm, align=center, font=\small,
+          text=diagramDarkText] (q) {#1};
+
+    % Yes branch
+    \node[diagram box dark, right=2.5cm of q] (yes) {#2};
+
+    % No branch
+    \node[diagram box dark, left=2.5cm of q] (no) {#3};
+
+    % Arrows
+    \draw[diagram arrow dark] (q.east) -- node[above, font=\scriptsize, text=diagramDarkTextMuted] {Yes} (yes.west);
+    \draw[diagram arrow dark] (q.west) -- node[above, font=\scriptsize, text=diagramDarkTextMuted] {No} (no.east);
+\end{tikzpicture}
+\end{center}
+}

@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.DS_Store
+
+# Runtime data — created on first use, not shipped
+citationforge/citations.db
+inputs/
+exports/
+runtime/
+series/
+bin/

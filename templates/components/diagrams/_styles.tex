@@ -1,0 +1,378 @@
+% _styles.tex - Shared TikZ styles for Paperforge diagrams
+% Requires: tikz, shapes.geometric, arrows.meta, positioning, calc
+% Load colors first: \input{_colors}
+
+% ============================================================================
+% REQUIRED LIBRARIES
+% ============================================================================
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, decorations.pathreplacing}
+
+% ============================================================================
+% BOX STYLES
+% ============================================================================
+
+\tikzset{
+    % Standard box (light theme)
+    diagram box/.style={
+        rectangle, rounded corners=4pt,
+        draw=diagramBorder, fill=diagramSurface,
+        minimum width=2.5cm, minimum height=1cm,
+        align=center, font=\small\bfseries,
+        text=diagramTextDark
+    },
+    % Primary emphasis box
+    diagram box primary/.style={
+        diagram box,
+        draw=diagramPrimary, fill=diagramPrimary!15,
+        text=diagramPrimary
+    },
+    % Secondary box
+    diagram box secondary/.style={
+        diagram box,
+        draw=diagramSecondary, fill=diagramSecondary!10
+    },
+    % Success/positive box
+    diagram box success/.style={
+        diagram box,
+        draw=diagramSuccess, fill=diagramSuccess!10,
+        text=diagramSuccess
+    },
+    % Warning box
+    diagram box warning/.style={
+        diagram box,
+        draw=diagramWarning, fill=diagramWarning!10
+    },
+    % Error/negative box
+    diagram box error/.style={
+        diagram box,
+        draw=diagramError, fill=diagramError!10,
+        text=diagramError
+    },
+    % Dark theme box
+    diagram box dark/.style={
+        rectangle, rounded corners=4pt,
+        draw=diagramDarkBorder, fill=diagramDarkBg,
+        minimum width=2.5cm, minimum height=1cm,
+        align=center, font=\small\bfseries,
+        text=diagramDarkText
+    },
+    % Dark theme primary
+    diagram box dark primary/.style={
+        diagram box dark,
+        draw=diagramDarkPrimary, fill=diagramDarkSurface
+    }
+}
+
+% ============================================================================
+% ARROW STYLES
+% ============================================================================
+
+\tikzset{
+    % Standard arrow
+    diagram arrow/.style={
+        -{Stealth[length=3mm, width=2mm]}, thick,
+        color=diagramNeutral
+    },
+    % Primary arrow
+    diagram arrow primary/.style={
+        diagram arrow, color=diagramPrimary
+    },
+    % Success arrow (green)
+    diagram arrow success/.style={
+        diagram arrow, color=diagramSuccess
+    },
+    % Error arrow (red)
+    diagram arrow error/.style={
+        diagram arrow, color=diagramError
+    },
+    % Dark theme arrow
+    diagram arrow dark/.style={
+        -{Stealth[length=3mm, width=2mm]}, thick,
+        color=diagramDarkBorder
+    },
+    % Bidirectional arrow
+    diagram arrow double/.style={
+        {Stealth[length=3mm]}-{Stealth[length=3mm]}, thick,
+        color=diagramNeutral
+    },
+    % Dashed connector (non-directional relationship)
+    diagram connector/.style={
+        dashed, thick, color=diagramNeutral
+    }
+}
+
+% ============================================================================
+% LABEL STYLES
+% ============================================================================
+
+\tikzset{
+    % Standard label
+    diagram label/.style={
+        font=\scriptsize, color=diagramTextMuted
+    },
+    % Label above arrow
+    diagram label above/.style={
+        diagram label, above, midway
+    },
+    % Label below arrow
+    diagram label below/.style={
+        diagram label, below, midway
+    },
+    % Dark theme label
+    diagram label dark/.style={
+        font=\scriptsize, color=diagramDarkTextMuted
+    }
+}
+
+% ============================================================================
+% SHAPE STYLES (Flowchart)
+% ============================================================================
+
+\tikzset{
+    % Start/End (pill shape)
+    diagram terminal/.style={
+        rectangle, rounded corners=8pt,
+        draw=diagramPrimary, fill=diagramPrimary!20,
+        minimum width=2cm, minimum height=0.8cm,
+        align=center, font=\small\bfseries
+    },
+    % Process (rectangle)
+    diagram process/.style={
+        rectangle, rounded corners=2pt,
+        draw=diagramBorder, fill=diagramSurface,
+        minimum width=2.5cm, minimum height=1cm,
+        align=center, font=\small
+    },
+    % Decision (diamond)
+    diagram decision/.style={
+        diamond, aspect=2,
+        draw=diagramWarning, fill=diagramWarning!15,
+        minimum width=2cm, minimum height=1cm,
+        align=center, font=\small
+    },
+    % Data (parallelogram)
+    diagram data/.style={
+        trapezium, trapezium left angle=70, trapezium right angle=110,
+        draw=diagramSecondary, fill=diagramSecondary!10,
+        minimum width=2cm, minimum height=0.8cm,
+        align=center, font=\small
+    }
+}
+
+% ============================================================================
+% NODE STYLES (Network diagrams)
+% ============================================================================
+
+\tikzset{
+    % Primary node (large)
+    diagram node primary/.style={
+        circle, draw=diagramPrimary, fill=diagramPrimary!20,
+        minimum size=1.2cm, align=center, font=\small\bfseries
+    },
+    % Secondary node (medium)
+    diagram node secondary/.style={
+        circle, draw=diagramSecondary, fill=diagramSecondary!15,
+        minimum size=0.9cm, align=center, font=\scriptsize
+    },
+    % Tertiary node (small)
+    diagram node tertiary/.style={
+        circle, draw=diagramNeutral, fill=diagramSurfaceAlt,
+        minimum size=0.6cm, align=center, font=\tiny
+    },
+    % Dark theme nodes
+    diagram node dark/.style={
+        circle, draw=diagramDarkBorder, fill=diagramDarkSurface,
+        minimum size=1cm, align=center, font=\small\bfseries,
+        text=diagramDarkText
+    }
+}
+
+% ============================================================================
+% TIMELINE STYLES
+% ============================================================================
+
+\tikzset{
+    % Timeline base line
+    diagram timeline/.style={
+        draw=diagramNeutral, line width=2pt
+    },
+    % Event marker
+    diagram event/.style={
+        circle, fill=diagramPrimary, minimum size=8pt, inner sep=0pt
+    },
+    % Milestone marker (larger)
+    diagram milestone/.style={
+        circle, fill=diagramAccent, draw=diagramPrimary, line width=1pt,
+        minimum size=12pt, inner sep=0pt
+    },
+    % Phase block
+    diagram phase/.style={
+        rectangle, rounded corners=2pt,
+        minimum height=0.6cm, align=center, font=\scriptsize\bfseries,
+        text=white
+    }
+}
+
+% ============================================================================
+% HIERARCHY/PYRAMID STYLES
+% ============================================================================
+
+\tikzset{
+    % Pyramid tier
+    diagram tier/.style={
+        trapezium, trapezium angle=75, trapezium stretches body,
+        draw=diagramBorder, minimum height=1cm,
+        align=center, font=\small\bfseries
+    },
+    % Tree node
+    diagram tree node/.style={
+        rectangle, rounded corners=3pt,
+        draw=diagramBorder, fill=diagramSurface,
+        minimum width=2cm, minimum height=0.7cm,
+        align=center, font=\small
+    }
+}
+
+% ============================================================================
+% BENTO GRID STYLES
+% ============================================================================
+
+\tikzset{
+    % Grid card
+    diagram card/.style={
+        rectangle, rounded corners=6pt,
+        draw=diagramBorder, fill=white,
+        align=center, font=\small,
+        inner sep=8pt
+    },
+    % Hero card (larger)
+    diagram card hero/.style={
+        diagram card,
+        fill=diagramSurface,
+        font=\normalsize\bfseries
+    },
+    % Dark theme card
+    diagram card dark/.style={
+        rectangle, rounded corners=6pt,
+        draw=diagramDarkBorder, fill=diagramDarkSurface,
+        align=center, font=\small,
+        inner sep=8pt, text=diagramDarkText
+    }
+}
+
+% ============================================================================
+% DATA CALLOUT STYLES
+% ============================================================================
+
+\tikzset{
+    % Large statistic
+    diagram stat/.style={
+        align=center, font=\Huge\bfseries, text=diagramPrimary
+    },
+    % Stat label
+    diagram stat label/.style={
+        align=center, font=\small, text=diagramTextMuted
+    },
+    % Trend up indicator
+    diagram trend up/.style={
+        font=\small\bfseries, text=diagramSuccess
+    },
+    % Trend down indicator
+    diagram trend down/.style={
+        font=\small\bfseries, text=diagramError
+    },
+    % Progress bar background
+    diagram progress bg/.style={
+        rectangle, rounded corners=3pt,
+        fill=diagramSurfaceAlt, minimum height=0.4cm
+    },
+    % Progress bar fill
+    diagram progress fill/.style={
+        rectangle, rounded corners=3pt,
+        fill=diagramPrimary, minimum height=0.4cm
+    }
+}
+
+% ============================================================================
+% COMPARISON STYLES
+% ============================================================================
+
+\tikzset{
+    % Left/positive column
+    diagram compare left/.style={
+        rectangle, rounded corners=4pt,
+        draw=diagramSuccess!50, fill=diagramPositive,
+        minimum width=4cm, align=left, inner sep=10pt, font=\small
+    },
+    % Right/negative column
+    diagram compare right/.style={
+        rectangle, rounded corners=4pt,
+        draw=diagramWarning!50, fill=diagramNegative,
+        minimum width=4cm, align=left, inner sep=10pt, font=\small
+    },
+    % Center divider
+    diagram divider/.style={
+        draw=diagramNeutral, line width=1pt
+    }
+}
+
+% ============================================================================
+% PHYSICS/MATH DIAGRAM STYLES
+% ============================================================================
+
+\tikzset{
+    % Force arrow (thick, prominent, for physics diagrams)
+    diagram force/.style={
+        -{Stealth[length=4mm, width=3mm]}, very thick,
+        color=diagramError
+    },
+    % Velocity vector (green, thinner)
+    diagram velocity/.style={
+        -{Stealth[length=3mm, width=2mm]}, thick,
+        color=diagramSuccess
+    },
+    % Dimension line with end ticks
+    diagram dimension/.style={
+        |<->|, thin, color=diagramTextMuted
+    },
+    % Safe/operating zone fill
+    diagram safe zone/.style={
+        fill=diagramSuccess!20, draw=diagramSuccess, thick
+    },
+    % Danger/failure zone fill
+    diagram danger zone/.style={
+        fill=diagramError!20, draw=diagramError, thick
+    },
+    % Pressure arrows (inward-pointing, for vessel diagrams)
+    diagram pressure/.style={
+        -{Stealth[length=2mm]}, thick, color=diagramPrimary
+    },
+    % Stress indicator (red, bidirectional)
+    diagram stress/.style={
+        {Stealth[length=2mm]}-{Stealth[length=2mm]}, thick,
+        color=diagramError
+    },
+    % Orbit path
+    diagram orbit/.style={
+        thick, color=diagramSecondary
+    },
+    % Transfer trajectory
+    diagram transfer/.style={
+        thick, dashed, color=diagramError
+    },
+    % Dark theme variants
+    diagram force dark/.style={
+        -{Stealth[length=4mm, width=3mm]}, very thick,
+        color=diagramDarkError
+    },
+    diagram velocity dark/.style={
+        -{Stealth[length=3mm, width=2mm]}, thick,
+        color=diagramDarkSuccess
+    },
+    diagram safe zone dark/.style={
+        fill=diagramDarkSuccess!30, draw=diagramDarkSuccess, thick
+    },
+    diagram danger zone dark/.style={
+        fill=diagramDarkError!25, draw=diagramDarkError, thick
+    }
+}

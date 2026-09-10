@@ -1,0 +1,203 @@
+% hierarchy.tex - Hierarchy and tree diagram macros for Paperforge
+% Requires: _colors.tex, _styles.tex loaded first
+%
+% Macros provided:
+%   \pyramid{top}{middle}{bottom}
+%   \pyramidfour{t1}{t2}{t3}{t4}
+%   \orgtree{root}{child1}{child2}
+%   \orgtreethree{root}{c1}{c2}{c3}
+%   \treediagram - manual tree construction
+%
+% Design: Pyramids use gradient tiers, trees use hierarchical spacing
+
+% ============================================================================
+% THREE-TIER PYRAMID
+% ============================================================================
+% Usage: \pyramid{Top Tier}{Middle Tier}{Bottom Tier}
+\newcommand{\pyramid}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    % Top tier (smallest)
+    \node[trapezium, trapezium angle=70, draw=diagramTier1, fill=diagramTier1!20,
+          minimum width=2.5cm, minimum height=0.9cm, align=center, font=\small\bfseries,
+          text=diagramTier1] (t1) at (0,2) {#1};
+
+    % Middle tier
+    \node[trapezium, trapezium angle=70, draw=diagramTier2, fill=diagramTier2!20,
+          minimum width=5cm, minimum height=0.9cm, align=center, font=\small\bfseries,
+          text=diagramTier2] (t2) at (0,1) {#2};
+
+    % Bottom tier (largest)
+    \node[trapezium, trapezium angle=70, draw=diagramTier3, fill=diagramTier3!20,
+          minimum width=7.5cm, minimum height=0.9cm, align=center, font=\small\bfseries,
+          text=diagramTier3] (t3) at (0,0) {#3};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% FOUR-TIER PYRAMID
+% ============================================================================
+% Usage: \pyramidfour{Tier 1}{Tier 2}{Tier 3}{Tier 4}
+\newcommand{\pyramidfour}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Top tier
+    \node[trapezium, trapezium angle=70, draw=diagramTier1, fill=diagramTier1!20,
+          minimum width=2cm, minimum height=0.8cm, align=center, font=\small\bfseries,
+          text=diagramTier1] (t1) at (0,2.7) {#1};
+
+    % Second tier
+    \node[trapezium, trapezium angle=70, draw=diagramTier2, fill=diagramTier2!20,
+          minimum width=4cm, minimum height=0.8cm, align=center, font=\small\bfseries,
+          text=diagramTier2] (t2) at (0,1.8) {#2};
+
+    % Third tier
+    \node[trapezium, trapezium angle=70, draw=diagramTier3, fill=diagramTier3!20,
+          minimum width=6cm, minimum height=0.8cm, align=center, font=\small\bfseries,
+          text=diagramTier3] (t3) at (0,0.9) {#3};
+
+    % Bottom tier
+    \node[trapezium, trapezium angle=70, draw=diagramTier4, fill=diagramTier4!50,
+          minimum width=8cm, minimum height=0.8cm, align=center, font=\small\bfseries,
+          text=diagramTextDark] (t4) at (0,0) {#4};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% INVERTED PYRAMID (funnel)
+% ============================================================================
+% Usage: \funnel{Wide Top}{Middle}{Narrow Bottom}
+\newcommand{\funnel}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    % Top (widest)
+    \node[trapezium, trapezium angle=110, draw=diagramTier1, fill=diagramTier1!20,
+          minimum width=7.5cm, minimum height=0.9cm, align=center, font=\small\bfseries,
+          text=diagramTier1] (t1) at (0,2) {#1};
+
+    % Middle
+    \node[trapezium, trapezium angle=110, draw=diagramTier2, fill=diagramTier2!20,
+          minimum width=5cm, minimum height=0.9cm, align=center, font=\small\bfseries,
+          text=diagramTier2] (t2) at (0,1) {#2};
+
+    % Bottom (narrowest)
+    \node[trapezium, trapezium angle=110, draw=diagramTier3, fill=diagramTier3!20,
+          minimum width=2.5cm, minimum height=0.9cm, align=center, font=\small\bfseries,
+          text=diagramTier3] (t3) at (0,0) {#3};
+
+    % Arrow indicating flow
+    \draw[diagram arrow, color=diagramNeutral] (0, -0.6) -- (0, -1);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% ORG CHART TREE (2 children)
+% ============================================================================
+% Usage: \orgtree{Root}{Child 1}{Child 2}
+\newcommand{\orgtree}[3]{%
+\begin{center}
+\begin{tikzpicture}[
+    level distance=1.8cm,
+    sibling distance=4cm,
+    edge from parent/.style={diagram arrow}
+]
+    \node[diagram tree node, fill=diagramPrimary!15, draw=diagramPrimary, font=\small\bfseries] {#1}
+        child {node[diagram tree node] {#2}}
+        child {node[diagram tree node] {#3}};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% ORG CHART TREE (3 children)
+% ============================================================================
+% Usage: \orgtreethree{Root}{Child 1}{Child 2}{Child 3}
+\newcommand{\orgtreethree}[4]{%
+\begin{center}
+\begin{tikzpicture}[
+    level distance=1.8cm,
+    sibling distance=3.5cm,
+    edge from parent/.style={diagram arrow}
+]
+    \node[diagram tree node, fill=diagramPrimary!15, draw=diagramPrimary, font=\small\bfseries] {#1}
+        child {node[diagram tree node] {#2}}
+        child {node[diagram tree node] {#3}}
+        child {node[diagram tree node] {#4}};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% TWO-LEVEL ORG CHART (Root → 2 → 4)
+% ============================================================================
+% Usage: \orgcharttwolevel{Root}{Manager1}{Manager2}{Staff1}{Staff2}{Staff3}{Staff4}
+\newcommand{\orgcharttwolevel}[7]{%
+\begin{center}
+\begin{tikzpicture}[
+    level 1/.style={sibling distance=5.5cm, level distance=1.5cm},
+    level 2/.style={sibling distance=2.5cm, level distance=1.5cm},
+    edge from parent/.style={diagram arrow}
+]
+    \node[diagram tree node, fill=diagramPrimary!15, draw=diagramPrimary, font=\small\bfseries] {#1}
+        child {node[diagram tree node, fill=diagramSecondary!15] {#2}
+            child {node[diagram tree node] {#4}}
+            child {node[diagram tree node] {#5}}
+        }
+        child {node[diagram tree node, fill=diagramSecondary!15] {#3}
+            child {node[diagram tree node] {#6}}
+            child {node[diagram tree node] {#7}}
+        };
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% SIMPLE HIERARCHY LIST (vertical)
+% ============================================================================
+% Usage: \hierarchylist{Level 1}{Level 2}{Level 3}
+\newcommand{\hierarchylist}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    % Level 1 (top)
+    \node[diagram box primary, minimum width=6cm] (l1) at (0, 0) {#1};
+
+    % Level 2
+    \node[diagram box, minimum width=6cm, below=0.8cm of l1] (l2) {#2};
+
+    % Level 3
+    \node[diagram box, minimum width=6cm, below=0.8cm of l2] (l3) {#3};
+
+    % Connecting lines
+    \draw[diagram arrow] (l1) -- (l2);
+    \draw[diagram arrow] (l2) -- (l3);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% DARK THEME PYRAMID
+% ============================================================================
+% Usage: \pyramiddark{Top}{Middle}{Bottom}
+\newcommand{\pyramiddark}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    % Top tier
+    \node[trapezium, trapezium angle=70, draw=diagramDarkBorder, fill=diagramDarkPrimary!30,
+          minimum width=2.5cm, minimum height=0.9cm, align=center, font=\small\bfseries,
+          text=diagramDarkText] (t1) at (0,2) {#1};
+
+    % Middle tier
+    \node[trapezium, trapezium angle=70, draw=diagramDarkBorder, fill=diagramDarkSurface,
+          minimum width=5cm, minimum height=0.9cm, align=center, font=\small\bfseries,
+          text=diagramDarkText] (t2) at (0,1) {#2};
+
+    % Bottom tier
+    \node[trapezium, trapezium angle=70, draw=diagramDarkBorder, fill=diagramDarkBg,
+          minimum width=7.5cm, minimum height=0.9cm, align=center, font=\small\bfseries,
+          text=diagramDarkText] (t3) at (0,0) {#3};
+\end{tikzpicture}
+\end{center}
+}

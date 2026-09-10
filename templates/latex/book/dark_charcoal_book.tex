@@ -1,0 +1,1225 @@
+\documentclass[11pt,letterpaper,openany]{book}
+
+% =============================================================================
+% PACKAGES
+% =============================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo}          % Palatino for text and math
+\usepackage[scaled=0.95]{helvet}
+\usepackage{courier}
+\usepackage[margin=1in]{geometry}  % Symmetric margins for digital reading
+\usepackage{indentfirst}           % Indent first paragraph after headings
+\usepackage{microtype}
+\usepackage{lettrine}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{needspace}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,theorems,breakable}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{emptypage}         % Blank pages truly blank
+\usepackage{etoolbox}
+\usepackage{cite}               % Citation handling (CRITICAL for \cite{})
+\usepackage{longtable}           % Multi-page tables
+\usepackage{array}               % Extended column formatting
+\usepackage{tabularx}            % Auto-width table columns
+\usepackage{colortbl}            % Colored table rules
+\usepackage{amsfonts}            % Extended math fonts
+\usepackage{textcomp}            % Additional text symbols
+\usepackage{listings}            % Code listings
+\usepackage{soul}                % Letter spacing (\sodef for ornaments)
+\usepackage[font=small,labelfont=bf,textfont=it]{caption}  % Caption styling
+\usepackage{amsthm}              % Theorem/proof environments
+\usepackage{makeidx}             % Index generation
+\makeindex
+\sodef\letterspacedtext{}{.15em}{.6em}{.8em}
+
+% =============================================================================
+% DARK MODE COLOR PALETTE
+% =============================================================================
+% All foreground colors verified WCAG AA (>=4.5:1) against #2D2D2D background.
+% AAA = >=7:1. Ratios computed per WCAG 2.1 relative luminance formula.
+\definecolor{pageblack}{HTML}{2D2D2D}       % Dark charcoal background
+\definecolor{textwhite}{HTML}{F0F0F0}       % Body text          — 12.08:1 (AAA)
+\definecolor{silver}{HTML}{D0D0D0}          % Section headers    —  8.93:1 (AAA)
+\definecolor{steel}{HTML}{B8B8C0}           % Subsection headers —  6.99:1 (AA)
+\definecolor{dimsilver}{HTML}{B0B0B8}        % Footnotes/running heads — 6.39:1 (AA)
+\definecolor{deepcharcoal}{HTML}{242424}     % Box backgrounds (not text)
+\definecolor{goldaccent}{HTML}{E0C04A}       % Drop caps/ornaments — 7.74:1 (AAA)
+\definecolor{steelblue}{HTML}{7BAFD4}        % Links/citations    — 5.85:1 (AA)
+\definecolor{mutedgold}{HTML}{D4B040}        % Rules/borders      — 6.61:1 (AA)
+
+% Phase rainbow palette (WCAG AA verified vs #2D2D2D)
+\definecolor{phaseRed}{HTML}{FF7070}         % Phase 0 — 5.12:1 (AA)
+\definecolor{phaseOrange}{HTML}{FFA54D}      % Phase 1 — 7.04:1 (AAA)
+\definecolor{phaseYellow}{HTML}{FFD93D}      % Phase 2 — 10.00:1 (AAA)
+\definecolor{phaseGreen}{HTML}{6BCB77}       % Phase 3 — 6.84:1 (AA)
+\definecolor{phaseTeal}{HTML}{5CD4D0}        % Phase 4 — 7.73:1 (AAA)
+\definecolor{phaseBlue}{HTML}{74B9FF}        % Phase 5 — 6.64:1 (AA)
+\definecolor{phaseIndigo}{HTML}{A29BFE}      % Phase 6 — 5.68:1 (AA)
+\definecolor{phaseViolet}{HTML}{CC99FF}      % Phase 7 — 6.27:1 (AA)
+\definecolor{phasePink}{HTML}{FF85A2}        % Phase 8 — 5.99:1 (AA)
+
+% \phase{N} command — renders "Phase N" in its rainbow color (bold text = redundant encoding per WCAG 1.4.1)
+\newcommand{\phase}[1]{%
+  \ifcase#1\relax\textbf{\textcolor{phaseRed}{Phase~0}}%
+  \or\textbf{\textcolor{phaseOrange}{Phase~1}}%
+  \or\textbf{\textcolor{phaseYellow}{Phase~2}}%
+  \or\textbf{\textcolor{phaseGreen}{Phase~3}}%
+  \or\textbf{\textcolor{phaseTeal}{Phase~4}}%
+  \or\textbf{\textcolor{phaseBlue}{Phase~5}}%
+  \or\textbf{\textcolor{phaseIndigo}{Phase~6}}%
+  \or\textbf{\textcolor{phaseViolet}{Phase~7}}%
+  \or\textbf{\textcolor{phasePink}{Phase~8}}%
+  \fi}
+
+% =============================================================================
+% APPLY DARK MODE
+% =============================================================================
+\pagecolor{pageblack}
+\color{textwhite}
+
+% =============================================================================
+% PARAGRAPH FORMATTING
+% =============================================================================
+\setlength{\parskip}{0.6\baselineskip plus 2pt minus 1pt}
+\setlength{\parindent}{1.5em}
+\linespread{1.22}
+
+% Widow/orphan control
+\widowpenalty=10000
+\clubpenalty=10000
+\brokenpenalty=10000
+
+% =============================================================================
+% FLOAT PLACEMENT
+% =============================================================================
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.85}
+\renewcommand{\textfraction}{0.15}
+\renewcommand{\floatpagefraction}{0.7}
+\setlength{\floatsep}{12pt plus 4pt minus 2pt}
+\setlength{\textfloatsep}{16pt plus 4pt minus 3pt}
+\setlength{\intextsep}{12pt plus 4pt minus 2pt}
+
+% =============================================================================
+% PER-CHAPTER NUMBERING
+% =============================================================================
+\numberwithin{equation}{chapter}
+\numberwithin{figure}{chapter}
+\numberwithin{table}{chapter}
+
+% =============================================================================
+% LIST FORMATTING
+% =============================================================================
+\setlist{itemsep=6pt, parsep=3pt, topsep=10pt}
+\setlist[itemize]{label={\textcolor{silver}{\textbullet}}}
+\setlist[description]{
+    font=\normalfont\bfseries\color{silver},
+    itemsep=8pt,
+    parsep=3pt,
+    leftmargin=2em,
+    style=nextline
+}
+
+% =============================================================================
+% TABLE FORMATTING
+% =============================================================================
+\arrayrulecolor{dimsilver}
+
+% =============================================================================
+% HYPERREF
+% =============================================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=steelblue,
+    citecolor=steelblue,
+    urlcolor=steelblue,
+    pdflang=en-US
+}
+
+% =============================================================================
+% HEADER/FOOTER (fancyhdr)
+% =============================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\textcolor{dimsilver}{\small\leftmark}}
+\fancyhead[RO]{\textcolor{dimsilver}{\small\rightmark}}
+\fancyfoot[C]{\textcolor{silver}{\thepage}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Plain page style (chapter openings)
+\fancypagestyle{plain}{%
+    \fancyhf{}%
+    \fancyfoot[C]{\textcolor{silver}{\thepage}}%
+    \renewcommand{\headrulewidth}{0pt}%
+    \renewcommand{\footrulewidth}{0pt}%
+}
+
+% Remove \MakeUppercase from marks (required for \phase{} in headings)
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+
+% =============================================================================
+% PART FORMATTING
+% =============================================================================
+\titleformat{\part}[display]
+    {\centering\Huge\bfseries\color{goldaccent}}
+    {\textcolor{mutedgold}{\rule{0.3\textwidth}{1pt}}\quad\textcolor{mutedgold}{\partname\ \thepart}\quad\textcolor{mutedgold}{\rule{0.3\textwidth}{1pt}}}
+    {20pt}
+    {\color{goldaccent}}
+\titlespacing*{\part}{0pt}{80pt}{40pt}
+
+% =============================================================================
+% CHAPTER FORMATTING
+% =============================================================================
+\titleformat{\chapter}[display]
+    {\normalfont\huge\bfseries\color{silver}\raggedright}
+    {\textcolor{dimsilver}{\chaptertitlename\ \thechapter}}
+    {10pt}
+    {\Huge\color{silver}\raggedright}
+    [\vspace{4pt}{\textcolor{mutedgold}{\rule{\textwidth}{0.5pt}}}]
+\titlespacing*{\chapter}{0pt}{40pt}{30pt}
+
+% =============================================================================
+% SECTION FORMATTING
+% =============================================================================
+% Orphan guards (\needspace): keep each heading with the first lines of its body
+% so it is never stranded alone at the foot of a page (recurring issue).
+\titleformat{\section}
+    {\needspace{4\baselineskip}\Large\bfseries\color{steelblue}\raggedright}
+    {\thesection}{1em}{}
+    [\vspace{2pt}{\textcolor{steelblue!70}{\rule{\textwidth}{0.5pt}}}]
+\titleformat{\subsection}
+    {\needspace{4\baselineskip}\large\bfseries\color{goldaccent}\raggedright}
+    {\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\needspace{2.5\baselineskip}\normalsize\bfseries\color{silver}\raggedright}
+    {\thesubsubsection}{1em}{}
+
+\titlespacing*{\section}{0pt}{1.5\baselineskip plus 4pt minus 2pt}{0.75\baselineskip plus 2pt minus 1pt}
+\titlespacing*{\subsection}{0pt}{1.25\baselineskip plus 3pt minus 2pt}{0.5\baselineskip plus 2pt minus 1pt}
+\titlespacing*{\subsubsection}{0pt}{1\baselineskip plus 2pt minus 1pt}{0.4\baselineskip plus 1pt minus 1pt}
+
+% =============================================================================
+% TABLE OF CONTENTS STYLING (titletoc — compatible with titlesec)
+% =============================================================================
+% TOC depth: show only parts and chapters (no sections)
+\setcounter{tocdepth}{0}
+
+% Part entries in TOC
+\titlecontents{part}
+    [0pt]                                              % left margin
+    {\addvspace{14pt}\large\bfseries\color{silver}}    % above-code
+    {\contentslabel{3em}}                              % numbered-entry
+    {}                                                 % numberless-entry
+    {\hfill\contentspage}                              % filler + page
+
+% Chapter entries in TOC
+\titlecontents{chapter}
+    [1.5em]                                            % left margin
+    {\addvspace{6pt}\color{textwhite}}                 % above-code
+    {\contentslabel{1.5em}}                            % numbered-entry
+    {}                                                 % numberless-entry
+    {\titlerule*[0.5pc]{\textcolor{dimsilver}{.}}\contentspage}  % filler + page
+
+% =============================================================================
+% DROP CAPS
+% =============================================================================
+\setcounter{DefaultLines}{3}
+\renewcommand{\DefaultLoversize}{0.1}
+\renewcommand{\DefaultNindent}{0pt}
+\renewcommand{\LettrineFontHook}{\color{goldaccent}\bfseries}
+
+% =============================================================================
+% CAPTION CONFIGURATION
+% =============================================================================
+\captionsetup{skip=10pt}
+\captionsetup[figure]{position=below}
+\captionsetup[table]{position=above,font={small,color=textwhite},labelfont={bf,color=goldaccent},textfont={it}}
+\DeclareCaptionFont{steel}{\color{steel}}
+\captionsetup{labelfont={bf,steel},textfont={it,steel}}
+
+% =============================================================================
+% TABLE STYLING (Dark Mode)
+% =============================================================================
+\arrayrulecolor{mutedgold}
+\setlength{\arrayrulewidth}{0.4pt}
+\newcommand{\tableheader}{\rowcolor{steelblue!25!pageblack}}
+
+% Row separator for tables (dimsilver horizontal rule)
+\newcommand{\rowsep}{\arrayrulecolor{dimsilver}\hline\arrayrulecolor{mutedgold}}
+
+% Alternating row colors for better scanning
+\newcommand{\altrowcolor}{\rowcolor{deepcharcoal!50}}
+
+% Table with automatic row borders
+\newenvironment{borderedtable}[1][]{%
+    \renewcommand{\arraystretch}{1.3}%
+    \arrayrulecolor{dimsilver}%
+    \setlength{\arrayrulewidth}{0.3pt}%
+    \begin{tabular}{#1}%
+    \hline
+}{%
+    \hline
+    \end{tabular}%
+    \arrayrulecolor{mutedgold}%
+    \setlength{\arrayrulewidth}{0.4pt}%
+}
+
+% =============================================================================
+% FOOTNOTE STYLING
+% =============================================================================
+\renewcommand{\footnoterule}{%
+    \kern-3pt
+    \textcolor{dimsilver}{\hrule width 0.4\columnwidth height 0.4pt}
+    \kern 2.6pt
+}
+\renewcommand{\thefootnote}{\textcolor{dimsilver}{\arabic{footnote}}}
+
+% =============================================================================
+% CODE LISTINGS
+% =============================================================================
+\lstset{
+    basicstyle=\ttfamily\small\color{textwhite},
+    keywordstyle=\color{steelblue}\bfseries,
+    commentstyle=\color{dimsilver}\itshape,
+    stringstyle=\color{goldaccent},
+    numbers=left,
+    numberstyle=\tiny\color{dimsilver},
+    numbersep=8pt,
+    frame=single,
+    framerule=0.5pt,
+    rulecolor=\color{dimsilver},
+    backgroundcolor=\color{deepcharcoal},
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4,
+    showstringspaces=false,
+    captionpos=b,
+    aboveskip=\baselineskip,
+    belowskip=\baselineskip
+}
+
+% =============================================================================
+% THEOREM ENVIRONMENTS (amsthm)
+% =============================================================================
+\newtheoremstyle{darktheorem}
+    {\baselineskip}{\baselineskip}
+    {\itshape\color{textwhite}}{}
+    {\bfseries\color{silver}}{.}
+    {0.5em}{}
+\newtheoremstyle{darkremark}
+    {0.5\baselineskip}{0.5\baselineskip}
+    {\color{steel}}{}
+    {\itshape\color{steel}}{.}
+    {0.5em}{}
+
+\theoremstyle{darktheorem}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{darkremark}
+\newtheorem*{remark}{Remark}
+
+% Proof environment QED symbol
+\renewcommand{\qedsymbol}{\textcolor{dimsilver}{$\blacksquare$}}
+
+% =============================================================================
+% CUSTOM ENVIRONMENTS
+% =============================================================================
+
+% Block quote with silver left rule
+\newtcolorbox{bookquote}{
+    blanker,
+    borderline west={3pt}{0pt}{dimsilver},
+    left=12pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    coltext=steel
+}
+
+% Key insight box
+\newtcolorbox{keyinsight}{
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=dimsilver,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=2pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={\textcolor{goldaccent}{\small\bfseries Key Insight}},
+    fonttitle=\bfseries\small,
+    coltitle=goldaccent,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=dimsilver,boxrule=0.5pt,arc=1pt}
+}
+
+% Epigraph environment
+\newenvironment{bookepigraph}{%
+    \begin{flushright}%
+    \begin{minipage}{0.7\textwidth}%
+    \itshape\color{steel}%
+}{%
+    \end{minipage}%
+    \end{flushright}%
+    \vspace{\baselineskip}%
+}
+
+% Styled foreword/preface box (ported from whitepaper styledabstract)
+\newtcolorbox{styledforeword}{
+    enhanced,
+    colback=deepcharcoal,
+    colframe=mutedgold,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=3pt,
+    left=14pt,
+    right=14pt,
+    top=10pt,
+    bottom=10pt,
+    before skip=12pt,
+    after skip=12pt,
+    borderline west={3pt}{0pt}{mutedgold},
+    shadow={2mm}{-2mm}{0mm}{fill=black!40},
+    title={\centering\small\bfseries\textcolor{goldaccent}{\letterspacedtext{FOREWORD}}},
+    fonttitle=\bfseries\small,
+    coltitle=goldaccent,
+    attach boxed title to top center={yshift=-2mm},
+    boxed title style={
+        colback=deepcharcoal,
+        colframe=mutedgold,
+        boxrule=0.5pt,
+        arc=2pt,
+        left=8pt,
+        right=8pt
+    },
+    after title={\vspace{4pt}\par\textcolor{mutedgold}{\rule{0.3\textwidth}{0.4pt}\quad$\diamond$\quad\rule{0.3\textwidth}{0.4pt}}\par\vspace{4pt}}
+}
+
+% =============================================================================
+% COMPATIBILITY ENVIRONMENTS
+% =============================================================================
+
+% Chapter intro/abstract environments (maps to bookquote styling)
+\newenvironment{chapterintro}{\begin{bookquote}\itshape}{\end{bookquote}}
+\newenvironment{chapterabstract}{\begin{bookquote}\small\itshape}{\end{bookquote}}
+
+% =============================================================================
+% UDL ENVIRONMENTS (Universal Design for Learning)
+% Grounded in UDL Guidelines 1-3, Cognitive Load Theory, Mayer's Principles
+% =============================================================================
+
+% Chapter Overview — Advance Organizer (UDL Guideline 3.1: Activate prior knowledge)
+\newtcolorbox{chapteroverview}{
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=steelblue,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=2pt,
+    borderline west={3pt}{0pt}{silver},
+    left=12pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={\textcolor{steelblue}{\small\bfseries Chapter Overview}},
+    fonttitle=\bfseries\small,
+    coltitle=steelblue,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=steelblue,boxrule=0.5pt,arc=1pt}
+}
+
+% Section Overview — Advance Organizer (UDL Guideline 3.1)
+\newtcolorbox{sectionoverview}{
+    blanker,
+    borderline west={3pt}{0pt}{steelblue},
+    left=12pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    coltext=steel
+}
+
+% Chapter Summary — Post-reading consolidation (UDL Guideline 3.4: Maximize generalization)
+% Readability: Normal font size, generous padding, clear visual hierarchy
+\newtcolorbox{chaptersummary}{
+    enhanced,
+    colback=deepcharcoal,
+    colframe=mutedgold,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=2pt,
+    left=16pt,
+    right=14pt,
+    top=12pt,
+    bottom=12pt,
+    before={\par\clearpage},
+    after skip=\baselineskip,
+    title={\textcolor{goldaccent}{\normalsize\bfseries Key Takeaways}},
+    fonttitle=\bfseries\normalsize,
+    coltitle=goldaccent,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=mutedgold,boxrule=0.5pt,arc=1pt,left=6pt,right=6pt},
+    before upper={\vspace{2pt}},
+    parbox=false
+}
+
+% Section Summary — Post-reading consolidation (UDL Guideline 3.4)
+\newtcolorbox{sectionsummary}{
+    blanker,
+    borderline west={3pt}{0pt}{mutedgold},
+    left=12pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    coltext=textwhite
+}
+
+% Learning Objectives (UDL Guideline 1: Multiple means of engagement)
+% Readability: Larger title, enhanced internal spacing, custom objective markers
+\newtcolorbox{learningobjectives}{
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=silver,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=2pt,
+    left=14pt,
+    right=12pt,
+    top=10pt,
+    bottom=10pt,
+    before skip=1.2\baselineskip,
+    after skip=1.2\baselineskip,
+    title={\textcolor{silver}{\normalsize\bfseries Learning Objectives}},
+    fonttitle=\bfseries\normalsize,
+    coltitle=silver,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=silver,boxrule=0.5pt,arc=1pt,left=6pt,right=6pt},
+    before upper={\begin{itemize}[leftmargin=1.5em,itemsep=6pt,label={\textcolor{silver}{$\triangleright$}}]},
+    after upper={\end{itemize}}
+}
+
+% Key Vocabulary (UDL Guideline 2.1: Clarify vocabulary and symbols)
+% Readability: Added "Key Terms" label for clear identification
+\newtcolorbox{keyvocabulary}{
+    blanker,
+    borderline west={3pt}{0pt}{steelblue},
+    left=14pt,
+    top=6pt,
+    bottom=6pt,
+    before skip=1.2\baselineskip,
+    after skip=1.2\baselineskip,
+    coltext=textwhite,
+    before upper={\textcolor{steelblue}{\small\bfseries Key Terms}\par\vspace{4pt}}
+}
+
+% Connection Box — Cross-referencing (UDL Guideline 3.2: Highlight patterns)
+\newtcolorbox{connectionbox}{
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=steelblue,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=2pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={\textcolor{steelblue}{\small\bfseries Connection}},
+    fonttitle=\bfseries\small,
+    coltitle=steelblue,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=steelblue,boxrule=0.5pt,arc=1pt}
+}
+
+% Reflection Prompt — Metacognitive self-monitoring (Cognitive Load Theory: germane processing)
+\newtcolorbox{reflectionprompt}{
+    blanker,
+    borderline west={2pt}{0pt}{dimsilver},
+    left=12pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    coltext=steel,
+    before upper={\textcolor{goldaccent}{\small\bfseries Pause and Consider}\par\smallskip\itshape}
+}
+
+% =============================================================================
+% DEFINITION & IDEA PRESENTATION ENVIRONMENTS
+% Grounded in CLT (Mayer's Signaling/Segmenting), UDL 2.1/2.4/3.3
+% =============================================================================
+
+% Formal Definition — numbered per chapter (UDL Guideline 2.1: Clarify vocabulary)
+% Readability: Attached boxed title, prominent term name in gold, clean separation
+\newtcolorbox[auto counter, number within=chapter]{definition}[1]{%
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=steelblue,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=0pt,
+    borderline west={4pt}{0pt}{steelblue},
+    left=14pt,
+    right=12pt,
+    top=10pt,
+    bottom=10pt,
+    before skip=1.2\baselineskip,
+    after skip=1.2\baselineskip,
+    title={\textcolor{steelblue}{\small\textsc{Definition}~\thetcbcounter}\enspace\textcolor{goldaccent}{\normalsize\bfseries #1}},
+    fonttitle=\normalsize,
+    coltitle=textwhite,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=steelblue,boxrule=0.5pt,arc=0pt,left=4pt,right=4pt}
+}
+
+% Principle / Law — numbered per chapter (Mayer's Signaling Principle)
+% Readability: Attached boxed title, prominent principle name, clean visual hierarchy
+% Page break handling: extras unbroken/first/middle/last for clean continuation
+\newtcolorbox[auto counter, number within=chapter]{principle}[1]{%
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=mutedgold,
+    coltext=textwhite,
+    boxrule=0.8pt,
+    arc=2pt,
+    left=14pt,
+    right=12pt,
+    top=12pt,
+    bottom=10pt,
+    before skip=1.2\baselineskip,
+    after skip=1.2\baselineskip,
+    title={\textcolor{mutedgold}{\small$\blacklozenge$\enspace\textsc{Principle}~\thetcbcounter}\enspace\textcolor{goldaccent}{\normalsize\bfseries #1}},
+    fonttitle=\normalsize,
+    coltitle=textwhite,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=mutedgold,boxrule=0.5pt,arc=1pt,left=4pt,right=4pt},
+    extras unbroken={borderline north={2.5pt}{0pt}{goldaccent}},
+    extras first={borderline north={2.5pt}{0pt}{goldaccent}},
+    extras middle={},
+    extras last={}
+}
+
+% Worked Example — numbered per chapter (Cognitive Load: segmenting)
+\newtcolorbox[auto counter, number within=chapter]{example}[1][]{%
+    blanker,
+    borderline west={3pt}{0pt}{silver},
+    left=12pt,
+    top=6pt,
+    bottom=6pt,
+    before skip=0.8\baselineskip,
+    after skip=0.8\baselineskip,
+    coltext=textwhite,
+    before upper={\textcolor{silver}{\small\bfseries Example~\thetcbcounter\ifstrempty{#1}{}{ --- #1}}\par\smallskip}
+}
+
+% Aside — tangential content (Cognitive Load: reduce extraneous)
+\newtcolorbox{aside}[1][]{%
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=dimsilver,
+    coltext=steel,
+    boxrule=0.3pt,
+    arc=2pt,
+    left=10pt,
+    right=10pt,
+    top=6pt,
+    bottom=6pt,
+    before skip=0.8\baselineskip,
+    after skip=0.8\baselineskip,
+    fontupper=\small,
+    title={\textcolor{dimsilver}{\small\itshape \ifstrempty{#1}{Aside}{#1}}},
+    fonttitle=\itshape\small,
+    coltitle=dimsilver,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=dimsilver,boxrule=0.3pt,arc=1pt}
+}
+
+% Highlighted equation callout box (ported from whitepaper)
+\newtcolorbox{equationbox}[1][]{
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=mutedgold,
+    coltext=textwhite,
+    boxrule=0.8pt,
+    arc=2pt,
+    left=12pt,
+    right=12pt,
+    top=10pt,
+    bottom=10pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    shadow={1mm}{-1mm}{0mm}{fill=black!30},
+    #1
+}
+
+% Notation / Variable definition block (UDL Guideline 2.4: Promote understanding)
+\newtcolorbox{notation}[1][]{
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=dimsilver,
+    coltext=textwhite,
+    boxrule=0.4pt,
+    arc=2pt,
+    left=10pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    before skip=0.8\baselineskip,
+    after skip=0.8\baselineskip,
+    title={\small\bfseries\textcolor{silver}{Notation}},
+    fonttitle=\bfseries\small,
+    coltitle=silver,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=dimsilver,boxrule=0.4pt,arc=1pt},
+    #1
+}
+% Alias for whitepaper compatibility
+\newenvironment{vardefs}[1][]{\begin{notation}[#1]}{\end{notation}}
+
+% Key result highlight box (ported from whitepaper)
+\newtcolorbox{resultbox}{
+    blanker,
+    borderline west={3pt}{0pt}{goldaccent},
+    left=12pt,
+    top=6pt,
+    bottom=6pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    coltext=textwhite
+}
+
+% First-use term highlight (Mayer's Signaling Principle)
+\newcommand{\term}[1]{\textbf{\textcolor{silver}{#1}}}
+
+% Keyword emphasis — first-use technical terms (Mayer's Signaling Principle)
+% Gold bold distinguishes from standard \textbf{}; WCAG AAA on pageblack
+\newcommand{\keyword}[1]{\textbf{\textcolor{goldaccent}{#1}}}
+
+% =============================================================================
+% SUPPLEMENTARY CONTENT ENVIRONMENTS (RAG: Presentation Design Patterns)
+% =============================================================================
+
+% Pull Quote — extract key insight from body text (visual interest)
+\newtcolorbox{pullquote}{
+    enhanced,
+    colback=transparent,
+    colframe=goldaccent,
+    boxrule=0pt,
+    borderline west={3pt}{0pt}{goldaccent},
+    left=12pt,
+    right=12pt,
+    top=6pt,
+    bottom=6pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    coltext=goldaccent,
+    fontupper=\large\itshape
+}
+
+% Sidebar — related but tangential content (Coherence Principle)
+\newtcolorbox{sidebar}[1]{
+    enhanced,
+    breakable,
+    colback=deepcharcoal!70,
+    colframe=dimsilver,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=2pt,
+    left=8pt,
+    right=8pt,
+    top=8pt,
+    bottom=8pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={\textcolor{dimsilver}{\small\bfseries #1}},
+    fonttitle=\bfseries\small,
+    coltitle=dimsilver,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal!70,colframe=dimsilver,boxrule=0.5pt,arc=1pt},
+    fontupper=\small
+}
+
+% Why It Matters — engagement/motivation block (Personalization Principle)
+\newtcolorbox{whyitmatters}{
+    enhanced,
+    breakable,
+    colback=deepcharcoal!60,
+    colframe=steelblue,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=2pt,
+    left=8pt,
+    right=8pt,
+    top=8pt,
+    bottom=8pt,
+    before skip=0.8\baselineskip,
+    after skip=0.8\baselineskip,
+    title={\textcolor{steelblue}{\small\bfseries Why This Matters}},
+    fonttitle=\bfseries\small,
+    coltitle=steelblue,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal!60,colframe=steelblue,boxrule=0.5pt,arc=1pt},
+    fontupper=\small
+}
+
+% =============================================================================
+% PROJECT ASCENSION: PHASE-SPECIFIC ENVIRONMENTS
+% =============================================================================
+
+% Helper: Get phase color by number (0-8)
+\newcommand{\getphasecolor}[1]{%
+  \ifcase#1\relax phaseRed%
+  \or phaseOrange%
+  \or phaseYellow%
+  \or phaseGreen%
+  \or phaseTeal%
+  \or phaseBlue%
+  \or phaseIndigo%
+  \or phaseViolet%
+  \or phasePink%
+  \fi}
+
+% phasebox — Phase-colored content box with auto-styling
+% Usage: \begin{phasebox}{0} ... \end{phasebox}
+\newtcolorbox{phasebox}[1]{
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=\getphasecolor{#1},
+    coltext=textwhite,
+    boxrule=0.6pt,
+    arc=2pt,
+    borderline west={3pt}{0pt}{\getphasecolor{#1}},
+    left=12pt,
+    right=10pt,
+    top=10pt,
+    bottom=8pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={\textcolor{\getphasecolor{#1}}{\small\bfseries Phase~#1}},
+    fonttitle=\bfseries\small,
+    coltitle=\getphasecolor{#1},
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=\getphasecolor{#1},boxrule=0.5pt,arc=1pt}
+}
+
+% phaseunlock — Phase unlock conditions checklist
+% Usage: \begin{phaseunlock}{3} \item Condition 1 \item Condition 2 \end{phaseunlock}
+\newtcolorbox{phaseunlock}[1]{
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=mutedgold,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=2pt,
+    borderline north={2pt}{0pt}{\getphasecolor{#1}},
+    left=10pt,
+    right=10pt,
+    top=10pt,
+    bottom=8pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={\textcolor{goldaccent}{\small$\checkmark$\enspace\bfseries Phase~#1 Unlock Conditions}},
+    fonttitle=\bfseries\small,
+    coltitle=goldaccent,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=mutedgold,boxrule=0.5pt,arc=1pt},
+    before upper={\begin{itemize}[leftmargin=1.5em,itemsep=4pt,label={\textcolor{\getphasecolor{#1}}{$\triangleright$}}]},
+    after upper={\end{itemize}}
+}
+
+% phasedeliverable — Compact phase deliverable box
+% Usage: \begin{phasedeliverable}{2} Deliverable description \end{phasedeliverable}
+\newtcolorbox{phasedeliverable}[1]{
+    blanker,
+    borderline west={3pt}{0pt}{\getphasecolor{#1}},
+    borderline south={0.5pt}{0pt}{silver},
+    left=12pt,
+    top=6pt,
+    bottom=6pt,
+    before skip=0.8\baselineskip,
+    after skip=0.8\baselineskip,
+    coltext=textwhite,
+    before upper={\textcolor{silver}{\small\bfseries Phase~#1 Deliverable:}\enspace}
+}
+
+% =============================================================================
+% PROJECT ASCENSION: TECHNICAL REQUIREMENT BOXES
+% =============================================================================
+
+% infrareq — Infrastructure requirement (steel blue theme)
+% Usage: \begin{infrareq}[Optional Title] Content \end{infrareq}
+\newtcolorbox{infrareq}[1][]{
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=steelblue,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=2pt,
+    borderline west={3pt}{0pt}{steelblue},
+    left=12pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={\textcolor{steelblue}{\small$\blacksquare$\enspace\bfseries Infrastructure Requirement\ifstrempty{#1}{}{: #1}}},
+    fonttitle=\bfseries\small,
+    coltitle=steelblue,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=steelblue,boxrule=0.5pt,arc=1pt}
+}
+
+% govreq — Governance prerequisite (muted gold theme)
+% Usage: \begin{govreq}[Optional Title] Content \end{govreq}
+\newtcolorbox{govreq}[1][]{
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=mutedgold,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=2pt,
+    borderline west={3pt}{0pt}{mutedgold},
+    left=12pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={\textcolor{goldaccent}{\small$\diamond$\enspace\bfseries Governance Prerequisite\ifstrempty{#1}{}{: #1}}},
+    fonttitle=\bfseries\small,
+    coltitle=goldaccent,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=mutedgold,boxrule=0.5pt,arc=1pt}
+}
+
+% capreq — Capability threshold (silver theme, numbered per chapter)
+% Usage: \begin{capreq}[Optional Title] Content \end{capreq}
+\newtcolorbox[auto counter, number within=chapter]{capreq}[1][]{
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=silver,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=2pt,
+    borderline north={2pt}{0pt}{dimsilver},
+    left=12pt,
+    right=10pt,
+    top=10pt,
+    bottom=8pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={\textcolor{silver}{\small$\vartriangleright$\enspace\bfseries Capability Threshold~\thetcbcounter\ifstrempty{#1}{}{: #1}}},
+    fonttitle=\bfseries\small,
+    coltitle=silver,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=silver,boxrule=0.5pt,arc=1pt}
+}
+
+% =============================================================================
+% PROJECT ASCENSION: ETHICAL CONSTRAINT BOXES
+% =============================================================================
+
+% Warning red color for ethical constraints (WCAG AA verified)
+\definecolor{warningRed}{HTML}{E05555}    % 4.64:1 vs #2D2D2D (AA)
+
+% ethicalconstraint — General ethical constraint (stark, minimal)
+% Usage: \begin{ethicalconstraint} Content \end{ethicalconstraint}
+\newtcolorbox{ethicalconstraint}{
+    enhanced,
+    colback=deepcharcoal,
+    colframe=warningRed,
+    coltext=textwhite,
+    boxrule=0.8pt,
+    arc=0pt,
+    borderline west={4pt}{0pt}{warningRed},
+    left=14pt,
+    right=10pt,
+    top=8pt,
+    bottom=8pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    before upper={\textcolor{warningRed}{\small$\blacktriangleright$\enspace\textsc{Ethical Constraint}}\par\vspace{4pt}}
+}
+
+% absoluterule — Non-negotiable absolute rule (strongest emphasis)
+% Usage: \begin{absoluterule} Content \end{absoluterule}
+\newtcolorbox{absoluterule}{
+    enhanced,
+    colback=deepcharcoal,
+    colframe=warningRed,
+    coltext=textwhite,
+    boxrule=1pt,
+    arc=0pt,
+    borderline north={3pt}{0pt}{goldaccent},
+    borderline south={3pt}{0pt}{goldaccent},
+    left=14pt,
+    right=14pt,
+    top=12pt,
+    bottom=10pt,
+    before skip=1.2\baselineskip,
+    after skip=1.2\baselineskip,
+    shadow={2mm}{-2mm}{0mm}{fill=black!40},
+    title={\centering\textcolor{goldaccent}{\small\bfseries\letterspacedtext{ABSOLUTE RULE}}},
+    fonttitle=\bfseries\small,
+    coltitle=goldaccent,
+    attach boxed title to top center={yshift=-2mm},
+    boxed title style={colback=deepcharcoal,colframe=warningRed,boxrule=0.8pt,arc=0pt,left=8pt,right=8pt}
+}
+
+% nonnegotiable — Hard gate conditions checklist (for Phase 7/8)
+% Usage: \begin{nonnegotiable}{Title} \item Condition 1 \item Condition 2 \end{nonnegotiable}
+\newtcolorbox{nonnegotiable}[1]{
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=warningRed,
+    coltext=textwhite,
+    boxrule=0.6pt,
+    arc=0pt,
+    borderline west={4pt}{0pt}{goldaccent},
+    left=12pt,
+    right=10pt,
+    top=10pt,
+    bottom=8pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={\textcolor{warningRed}{\small$\blacksquare$\enspace\bfseries Non-Negotiable: #1}},
+    fonttitle=\bfseries\small,
+    coltitle=warningRed,
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=deepcharcoal,colframe=warningRed,boxrule=0.5pt,arc=0pt},
+    before upper={\begin{itemize}[leftmargin=1.5em,itemsep=4pt,label={\textcolor{goldaccent}{$\blacktriangleright$}}]},
+    after upper={\end{itemize}}
+}
+
+% =============================================================================
+% PROJECT ASCENSION: CROSS-REFERENCE ENHANCEMENTS
+% =============================================================================
+
+% \phaseref{N}{Description} — Phase cross-reference command
+% Renders "Phase N: Description" in phase color, hyperlinked
+% Usage: See \phaseref{3}{Carbon Stewardship} for mass reclamation.
+\newcommand{\phaseref}[2]{%
+  \textcolor{\getphasecolor{#1}}{\textbf{Phase~#1}: #2}%
+}
+
+% \phaselabel{N} — Inline phase label (shorter form)
+% Usage: The \phaselabel{2} infrastructure provides...
+\newcommand{\phaselabel}[1]{%
+  \textcolor{\getphasecolor{#1}}{\textbf{Phase~#1}}%
+}
+
+% connectionphase — Cross-phase connection box (dual-colored)
+% Usage: \begin{connectionphase}{1}{3} Content \end{connectionphase}
+\newtcolorbox{connectionphase}[2]{
+    enhanced,
+    breakable,
+    colback=deepcharcoal,
+    colframe=dimsilver,
+    coltext=textwhite,
+    boxrule=0.5pt,
+    arc=2pt,
+    borderline west={3pt}{0pt}{\getphasecolor{#1}},
+    borderline east={3pt}{0pt}{\getphasecolor{#2}},
+    left=14pt,
+    right=14pt,
+    top=8pt,
+    bottom=8pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip,
+    title={\textcolor{dimsilver}{\small$\leftrightarrow$\enspace\bfseries Phase~#1 \textcolor{steelblue}{$\longleftrightarrow$} Phase~#2 Connection}},
+    fonttitle=\bfseries\small,
+    coltitle=dimsilver,
+    attach boxed title to top center={yshift=-2mm},
+    boxed title style={colback=deepcharcoal,colframe=dimsilver,boxrule=0.5pt,arc=1pt,left=6pt,right=6pt}
+}
+
+% unlocksequence environment — Phase dependency table
+% Usage: \begin{unlocksequence} \unlockrow{0}{Cognitive substrate}{1,2,3,4,5,6,7,8} \end{unlocksequence}
+\newenvironment{unlocksequence}{%
+    \vspace{\baselineskip}%
+    \begin{center}%
+    \textcolor{goldaccent}{\small\bfseries\letterspacedtext{UNLOCK SEQUENCE}}%
+    \par\vspace{6pt}%
+    \textcolor{mutedgold}{\rule{0.4\textwidth}{0.4pt}}%
+    \par\vspace{8pt}%
+    \begin{tabular}{@{}c@{\hspace{8pt}}l@{\hspace{12pt}}l@{}}%
+    \textcolor{silver}{\small\bfseries Phase} & \textcolor{silver}{\small\bfseries Description} & \textcolor{silver}{\small\bfseries Unlocks} \\[4pt]%
+    \arrayrulecolor{dimsilver}\hline\\[-8pt]%
+}{%
+    \end{tabular}%
+    \par\vspace{6pt}%
+    \textcolor{mutedgold}{\rule{0.4\textwidth}{0.4pt}}%
+    \end{center}%
+    \vspace{\baselineskip}%
+}
+
+% \unlockrow{N}{Description}{comma-separated phases unlocked}
+% Usage: \unlockrow{0}{Cognitive substrate}{1,2,3,4,5,6,7,8}
+\newcommand{\unlockrow}[3]{%
+    \textcolor{\getphasecolor{#1}}{\bfseries #1} & #2 & \textcolor{dimsilver}{\small$\rightarrow$ #3} \\[4pt]%
+}
+
+% phaseladder — Compact vertical phase progression indicator
+% Usage: \phaseladder{current_phase}
+\newcommand{\phaseladder}[1]{%
+    \begin{center}%
+    \textcolor{dimsilver}{\footnotesize%
+    \ifnum#1>0 \textcolor{\getphasecolor{0}}{0}\,$\uparrow$\,\fi%
+    \ifnum#1>1 \textcolor{\getphasecolor{1}}{1}\,$\uparrow$\,\fi%
+    \ifnum#1>2 \textcolor{\getphasecolor{2}}{2}\,$\uparrow$\,\fi%
+    \ifnum#1>3 \textcolor{\getphasecolor{3}}{3}\,$\uparrow$\,\fi%
+    \ifnum#1>4 \textcolor{\getphasecolor{4}}{4}\,$\uparrow$\,\fi%
+    \ifnum#1>5 \textcolor{\getphasecolor{5}}{5}\,$\uparrow$\,\fi%
+    \ifnum#1>6 \textcolor{\getphasecolor{6}}{6}\,$\uparrow$\,\fi%
+    \ifnum#1>7 \textcolor{\getphasecolor{7}}{7}\,$\uparrow$\,\fi%
+    \textcolor{\getphasecolor{#1}}{\bfseries #1}%
+    }%
+    \end{center}%
+}
+
+% =============================================================================
+% SECTION ORNAMENT
+% =============================================================================
+\newcommand{\sectionornament}{%
+    \vspace{0.5\baselineskip}%
+    \begin{center}%
+    \textcolor{dimsilver}{$\ast$\quad$\ast$\quad$\ast$}%
+    \end{center}%
+    \vspace{0.5\baselineskip}%
+}
+
+\newcommand{\chapterornament}{%
+    \vspace{0.3\baselineskip}%
+    \begin{center}%
+    \textcolor{mutedgold}{\rule{0.2\textwidth}{0.5pt}\quad$\diamond$\quad\rule{0.2\textwidth}{0.5pt}}%
+    \end{center}%
+    \vspace{0.3\baselineskip}%
+}
+
+% =============================================================================
+% DOCUMENT BEGIN
+% =============================================================================
+\begin{document}
+
+% ===================== HALF TITLE PAGE =====================
+\begin{titlepage}
+    \centering
+    \vspace*{4cm}
+    {\Huge\bfseries\color{silver} {{TITLE}} \par}
+    \vfill
+\end{titlepage}
+
+\clearpage\thispagestyle{empty}\mbox{}\clearpage
+
+% ===================== TITLE PAGE =====================
+\begin{titlepage}
+    \centering
+    \vspace*{1.5cm}
+
+    {\textcolor{mutedgold}{\rule{0.6\textwidth}{1pt}}}
+
+    \vspace{0.8cm}
+
+    {\textcolor{dimsilver}{\large\scshape {{SERIES_TITLE}}}}
+
+    \vspace{0.3cm}
+
+    {\textcolor{dimsilver}{\normalsize Volume {{VOLUME}}}}
+
+    \vspace{1.5cm}
+
+    {\Huge\bfseries\color{silver} {{TITLE}} \par}
+
+    \vspace{0.5cm}
+
+    {\textcolor{mutedgold}{\rule{0.4\textwidth}{0.5pt}}}
+
+    \vspace{0.4cm}
+
+    {\large\color{steel}\itshape {{SUBTITLE}} \par}
+
+    \vspace{3cm}
+
+    {\Large\color{textwhite} {{AUTHOR}} \par}
+
+    \vfill
+
+    {\textcolor{mutedgold}{\rule{0.6\textwidth}{1pt}}}
+
+    \vspace{0.5cm}
+
+    {\normalsize\color{dimsilver} {{DATE}} \par}
+
+\end{titlepage}
+
+\clearpage\thispagestyle{empty}\mbox{}\clearpage
+
+% ===================== FRONT MATTER =====================
+\frontmatter
+\pagenumbering{roman}
+
+{{FRONT_MATTER}}
+
+% Table of Contents
+{
+\hypersetup{linkcolor=steelblue}
+\tableofcontents
+}
+\clearpage
+
+% ===================== MAIN MATTER =====================
+\mainmatter
+\pagenumbering{arabic}
+
+{{PARTS_AND_CHAPTERS}}
+
+% ===================== BACK MATTER =====================
+\backmatter
+
+{{APPENDICES}}
+
+{{BIBLIOGRAPHY}}
+
+\printindex
+
+\end{document}

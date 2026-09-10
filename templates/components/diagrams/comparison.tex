@@ -1,0 +1,182 @@
+% comparison.tex - Comparison layout macros for Paperforge
+% Requires: _colors.tex, _styles.tex loaded first
+%
+% Macros provided:
+%   \sidebyside{left title}{left content}{right title}{right content}
+%   \beforeafter{before title}{before content}{after title}{after content}
+%   \proscons{pros list}{cons list}
+%   \comparisonthree{col1}{col2}{col3}
+%
+% Design: Green tint for positive/before, Orange tint for negative/after
+
+% ============================================================================
+% SIDE-BY-SIDE COMPARISON
+% ============================================================================
+% Usage: \sidebyside{Left Title}{Left content}{Right Title}{Right content}
+\newcommand{\sidebyside}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Left column
+    \node[diagram compare left, minimum height=3cm] (left) at (0,0) {%
+        \textbf{#1}\\[4pt]
+        \begin{minipage}{3.5cm}
+        #2
+        \end{minipage}
+    };
+    % Right column
+    \node[diagram compare right, minimum height=3cm] (right) at (5.5,0) {%
+        \textbf{#3}\\[4pt]
+        \begin{minipage}{3.5cm}
+        #4
+        \end{minipage}
+    };
+    % Center divider
+    \draw[diagram divider] (2.75, 1.7) -- (2.75, -1.7);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% BEFORE/AFTER COMPARISON
+% ============================================================================
+% Usage: \beforeafter{Before Title}{Before content}{After Title}{After content}
+\newcommand{\beforeafter}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Before box
+    \node[diagram compare left, minimum height=2.5cm, minimum width=4.5cm] (before) at (0,0) {%
+        \textbf{#1}\\[4pt]
+        \begin{minipage}{4cm}
+        #2
+        \end{minipage}
+    };
+    % Arrow
+    \node at (3.5, 0) {\Large\color{diagramPrimary}$\Rightarrow$};
+    % After box
+    \node[diagram compare right, minimum height=2.5cm, minimum width=4.5cm] (after) at (7,0) {%
+        \textbf{#3}\\[4pt]
+        \begin{minipage}{4cm}
+        #4
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% PROS AND CONS
+% ============================================================================
+% Usage: \proscons{Pro item 1\\Pro item 2}{Con item 1\\Con item 2}
+\newcommand{\proscons}[2]{%
+\begin{center}
+\begin{tikzpicture}
+    % Pros column (green)
+    \node[rectangle, rounded corners=4pt, draw=diagramSuccess!50, fill=diagramPositive,
+          minimum width=5cm, minimum height=3cm, align=left, inner sep=10pt] (pros) at (0,0) {%
+        \textcolor{diagramSuccess}{\textbf{\large $\checkmark$ Pros}}\\[6pt]
+        \begin{minipage}{4.5cm}
+        \small #1
+        \end{minipage}
+    };
+    % Cons column (orange/red)
+    \node[rectangle, rounded corners=4pt, draw=diagramError!50, fill=diagramError!10,
+          minimum width=5cm, minimum height=3cm, align=left, inner sep=10pt] (cons) at (6,0) {%
+        \textcolor{diagramError}{\textbf{\large $\times$ Cons}}\\[6pt]
+        \begin{minipage}{4.5cm}
+        \small #2
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% THREE-COLUMN COMPARISON
+% ============================================================================
+% Usage: \comparisonthree{Title1}{Content1}{Title2}{Content2}{Title3}{Content3}
+\newcommand{\comparisonthree}[6]{%
+\begin{center}
+\begin{tikzpicture}
+    % Column 1
+    \node[diagram card, minimum width=3.5cm, minimum height=3cm] (c1) at (0,0) {%
+        \textbf{#1}\\[4pt]
+        \begin{minipage}{3cm}
+        \small #2
+        \end{minipage}
+    };
+    % Column 2
+    \node[diagram card, minimum width=3.5cm, minimum height=3cm] (c2) at (4.5,0) {%
+        \textbf{#3}\\[4pt]
+        \begin{minipage}{3cm}
+        \small #4
+        \end{minipage}
+    };
+    % Column 3
+    \node[diagram card, minimum width=3.5cm, minimum height=3cm] (c3) at (9,0) {%
+        \textbf{#5}\\[4pt]
+        \begin{minipage}{3cm}
+        \small #6
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% FEATURE COMPARISON TABLE (Visual)
+% ============================================================================
+% Usage: \featurecompare{Feature}{Option A}{Option B}
+%        Call multiple times, wrap in tikzpicture
+\newcommand{\featurerow}[3]{%
+    \node[anchor=west, font=\small] at (0, \featureY) {#1};
+    \node[anchor=center] at (5, \featureY) {#2};
+    \node[anchor=center] at (8, \featureY) {#3};
+    \pgfmathsetmacro{\featureY}{\featureY - 0.6}
+}
+
+% ============================================================================
+% DARK THEME SIDE-BY-SIDE
+% ============================================================================
+\newcommand{\sidebysidedark}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Left column
+    \node[diagram card dark, minimum height=3cm, minimum width=4.5cm] (left) at (0,0) {%
+        \textbf{#1}\\[4pt]
+        \begin{minipage}{4cm}
+        #2
+        \end{minipage}
+    };
+    % Right column
+    \node[diagram card dark, minimum height=3cm, minimum width=4.5cm] (right) at (5.5,0) {%
+        \textbf{#3}\\[4pt]
+        \begin{minipage}{4cm}
+        #4
+        \end{minipage}
+    };
+    % Center divider
+    \draw[draw=diagramDarkBorder, line width=1pt] (2.75, 1.7) -- (2.75, -1.7);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% VERSUS COMPARISON
+% ============================================================================
+% Usage: \versus{Option A}{Option B}
+\newcommand{\versus}[2]{%
+\begin{center}
+\begin{tikzpicture}
+    % Option A
+    \node[diagram box primary, minimum width=4cm, minimum height=1.5cm] (a) at (0,0) {%
+        \textbf{#1}
+    };
+    % VS badge
+    \node[circle, fill=diagramAccent, minimum size=1cm, font=\small\bfseries] at (2.75, 0) {VS};
+    % Option B
+    \node[diagram box secondary, minimum width=4cm, minimum height=1.5cm] (b) at (5.5,0) {%
+        \textbf{#2}
+    };
+\end{tikzpicture}
+\end{center}
+}

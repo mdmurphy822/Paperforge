@@ -1,0 +1,225 @@
+% network.tex - Network and relationship diagram macros for Paperforge
+% Requires: _colors.tex, _styles.tex loaded first
+%
+% Macros provided:
+%   \networktriad{center}{node1}{node2}{node3}
+%   \networkstar{center}{n1}{n2}{n3}{n4}
+%   \dagdiagram - manual DAG construction
+%   \venndiagram{set1}{set2}{overlap}
+%   \venntriangle{s1}{s2}{s3}{center}
+%
+% Design: Primary nodes larger, secondary nodes smaller
+
+% ============================================================================
+% NETWORK TRIAD (center + 3 connected nodes)
+% ============================================================================
+% Usage: \networktriad{Center}{Node 1}{Node 2}{Node 3}
+\newcommand{\networktriad}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Center node (primary)
+    \node[diagram node primary] (center) at (0,0) {#1};
+
+    % Surrounding nodes (secondary)
+    \node[diagram node secondary] (n1) at (90:2.5cm) {#2};
+    \node[diagram node secondary] (n2) at (210:2.5cm) {#3};
+    \node[diagram node secondary] (n3) at (330:2.5cm) {#4};
+
+    % Connections
+    \draw[diagram arrow] (center) -- (n1);
+    \draw[diagram arrow] (center) -- (n2);
+    \draw[diagram arrow] (center) -- (n3);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% NETWORK STAR (center + 4 connected nodes)
+% ============================================================================
+% Usage: \networkstar{Center}{North}{East}{South}{West}
+\newcommand{\networkstar}[5]{%
+\begin{center}
+\begin{tikzpicture}
+    % Center node (primary)
+    \node[diagram node primary] (center) at (0,0) {#1};
+
+    % Surrounding nodes (secondary)
+    \node[diagram node secondary] (n) at (90:2.5cm) {#2};
+    \node[diagram node secondary] (e) at (0:2.5cm) {#3};
+    \node[diagram node secondary] (s) at (270:2.5cm) {#4};
+    \node[diagram node secondary] (w) at (180:2.5cm) {#5};
+
+    % Connections (bidirectional)
+    \draw[diagram arrow double] (center) -- (n);
+    \draw[diagram arrow double] (center) -- (e);
+    \draw[diagram arrow double] (center) -- (s);
+    \draw[diagram arrow double] (center) -- (w);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% LINEAR NETWORK (chain of nodes)
+% ============================================================================
+% Usage: \networkchain{Node1}{Node2}{Node3}{Node4}
+\newcommand{\networkchain}[4]{%
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm]
+    \node[diagram node primary] (n1) {#1};
+    \node[diagram node secondary, right=of n1] (n2) {#2};
+    \node[diagram node secondary, right=of n2] (n3) {#3};
+    \node[diagram node secondary, right=of n3] (n4) {#4};
+
+    \draw[diagram arrow] (n1) -- (n2);
+    \draw[diagram arrow] (n2) -- (n3);
+    \draw[diagram arrow] (n3) -- (n4);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% FULLY CONNECTED TRIAD
+% ============================================================================
+% Usage: \networkfully{Node1}{Node2}{Node3}
+\newcommand{\networkfully}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    \node[diagram node primary] (n1) at (90:2cm) {#1};
+    \node[diagram node primary] (n2) at (210:2cm) {#2};
+    \node[diagram node primary] (n3) at (330:2cm) {#3};
+
+    % All connections (bidirectional)
+    \draw[diagram arrow double] (n1) -- (n2);
+    \draw[diagram arrow double] (n2) -- (n3);
+    \draw[diagram arrow double] (n3) -- (n1);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% DIRECTED ACYCLIC GRAPH (3 levels)
+% ============================================================================
+% Usage: \dagthree{Root}{Mid1}{Mid2}{Leaf1}{Leaf2}{Leaf3}
+\newcommand{\dagthree}[6]{%
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm]
+    % Root level
+    \node[diagram node primary] (root) at (0, 0) {#1};
+
+    % Middle level
+    \node[diagram node secondary] (m1) at (-2, -1.8) {#2};
+    \node[diagram node secondary] (m2) at (2, -1.8) {#3};
+
+    % Leaf level
+    \node[diagram node tertiary] (l1) at (-3, -3.6) {#4};
+    \node[diagram node tertiary] (l2) at (0, -3.6) {#5};
+    \node[diagram node tertiary] (l3) at (3, -3.6) {#6};
+
+    % Edges
+    \draw[diagram arrow] (root) -- (m1);
+    \draw[diagram arrow] (root) -- (m2);
+    \draw[diagram arrow] (m1) -- (l1);
+    \draw[diagram arrow] (m1) -- (l2);
+    \draw[diagram arrow] (m2) -- (l2);
+    \draw[diagram arrow] (m2) -- (l3);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% TWO-SET VENN DIAGRAM
+% ============================================================================
+% Usage: \venndiagram{Set A}{Set B}{Overlap Label}
+\newcommand{\venndiagram}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    % Set A (left circle)
+    \draw[draw=diagramPrimary, fill=diagramPrimary!20, thick] (-1,0) circle (1.8cm);
+    \node at (-2.2, 0) {\textbf{#1}};
+
+    % Set B (right circle)
+    \draw[draw=diagramSecondary, fill=diagramSecondary!20, thick] (1,0) circle (1.8cm);
+    \node at (2.2, 0) {\textbf{#2}};
+
+    % Overlap label
+    \node at (0, 0) {\small #3};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% THREE-SET VENN DIAGRAM
+% ============================================================================
+% Usage: \venntriangle{Set A}{Set B}{Set C}{Center Label}
+\newcommand{\venntriangle}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Set A (top)
+    \draw[draw=diagramPrimary, fill=diagramPrimary!15, thick] (0, 1) circle (1.5cm);
+    \node at (0, 2.8) {\textbf{#1}};
+
+    % Set B (bottom left)
+    \draw[draw=diagramSecondary, fill=diagramSecondary!15, thick] (-1.2, -0.8) circle (1.5cm);
+    \node at (-2.5, -1.5) {\textbf{#2}};
+
+    % Set C (bottom right)
+    \draw[draw=diagramAccent, fill=diagramAccent!15, thick] (1.2, -0.8) circle (1.5cm);
+    \node at (2.5, -1.5) {\textbf{#3}};
+
+    % Center label
+    \node at (0, -0.2) {\small\bfseries #4};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% HUB AND SPOKE (business model diagram)
+% ============================================================================
+% Usage: \hubspoke{Hub}{Spoke1}{Spoke2}{Spoke3}{Spoke4}{Spoke5}{Spoke6}
+\newcommand{\hubspoke}[7]{%
+\begin{center}
+\begin{tikzpicture}
+    % Hub (center)
+    \node[diagram node primary, minimum size=1.5cm] (hub) at (0,0) {#1};
+
+    % Spokes
+    \node[diagram node secondary] (s1) at (60:2.5cm) {#2};
+    \node[diagram node secondary] (s2) at (120:2.5cm) {#3};
+    \node[diagram node secondary] (s3) at (180:2.5cm) {#4};
+    \node[diagram node secondary] (s4) at (240:2.5cm) {#5};
+    \node[diagram node secondary] (s5) at (300:2.5cm) {#6};
+    \node[diagram node secondary] (s6) at (0:2.5cm) {#7};
+
+    % Connections
+    \draw[diagram connector] (hub) -- (s1);
+    \draw[diagram connector] (hub) -- (s2);
+    \draw[diagram connector] (hub) -- (s3);
+    \draw[diagram connector] (hub) -- (s4);
+    \draw[diagram connector] (hub) -- (s5);
+    \draw[diagram connector] (hub) -- (s6);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% DARK THEME NETWORK
+% ============================================================================
+% Usage: \networkdark{Center}{Node1}{Node2}{Node3}
+\newcommand{\networkdark}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Center node
+    \node[diagram node dark, fill=diagramDarkPrimary!30] (center) at (0,0) {#1};
+
+    % Surrounding nodes
+    \node[diagram node dark] (n1) at (90:2.5cm) {#2};
+    \node[diagram node dark] (n2) at (210:2.5cm) {#3};
+    \node[diagram node dark] (n3) at (330:2.5cm) {#4};
+
+    % Connections
+    \draw[diagram arrow dark] (center) -- (n1);
+    \draw[diagram arrow dark] (center) -- (n2);
+    \draw[diagram arrow dark] (center) -- (n3);
+\end{tikzpicture}
+\end{center}
+}

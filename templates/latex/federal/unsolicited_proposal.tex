@@ -1,0 +1,145 @@
+\documentclass[11pt,letterpaper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathpazo}           % Palatino for text
+\usepackage[scaled=0.95]{helvet} % Helvetica for sans-serif
+\usepackage{courier}             % Courier for monospace
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{needspace}  % orphan guards in \titleformat (keep headings off page-bottoms)
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+\usepackage{parskip}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{tocloft}
+
+% Paragraph formatting
+\setlength{\parskip}{0.6\baselineskip plus 2pt minus 1pt}
+\setlength{\parindent}{0pt}
+\linespread{1.12}
+
+% Widow/orphan control
+\widowpenalty=10000
+\clubpenalty=10000
+
+% Colors - Muted navy only, no background color
+% All foreground text colors verified against white (#FFFFFF) background per WCAG 2.1.
+\definecolor{navyheading}{RGB}{0,34,68}  % navyheading: 16.00:1 - AA/AAA Pass
+\definecolor{darkgray}{RGB}{60,60,60}  % darkgray: 11.03:1 - AA/AAA Pass
+\definecolor{rulecolor}{RGB}{0,34,68}  % rulecolor: 16.00:1 - AA/AAA Pass (decorative)
+
+% Hyperref setup - minimal styling
+\hypersetup{
+    colorlinks=true,
+    linkcolor=navyheading,  % navyheading: 16.00:1 - AA/AAA Pass
+    citecolor=darkgray,  % darkgray: 11.03:1 - AA/AAA Pass
+    urlcolor=navyheading,  % navyheading: 16.00:1 - AA/AAA Pass
+    pdflang=en-US
+}
+
+% TOC formatting
+\setlength{\cftbeforesecskip}{4pt}
+\setlength{\cftbeforesubsecskip}{2pt}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+
+% Header/Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textsf{{{TITLE}}}}
+\fancyhead[R]{\small\textsf{\thepage}}
+\fancyfoot[C]{\footnotesize\textsf{{{ORGANIZATION}} --- Unsolicited Proposal --- FAR 15.6}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.2pt}
+
+% Section formatting - clean, formal
+% Orphan guards: \needspace reserves the heading + first lines of its body so a
+% heading can never be stranded alone at the foot of a page (recurring issue).
+\titleformat{\section}
+    {\needspace{4\baselineskip}\Large\bfseries\sffamily\color{navyheading}}  % navyheading: 16.00:1 - AA/AAA Pass
+    {\thesection.}{0.5em}{}
+\titleformat{\subsection}
+    {\needspace{3\baselineskip}\large\bfseries\sffamily\color{navyheading}}  % navyheading: 16.00:1 - AA/AAA Pass
+    {\thesubsection}{0.5em}{}
+\titleformat{\subsubsection}
+    {\needspace{2.5\baselineskip}\normalsize\bfseries\sffamily}
+    {\thesubsubsection}{0.5em}{}
+
+% Section spacing
+\titlespacing*{\section}{0pt}{1.5\baselineskip}{0.75\baselineskip}
+\titlespacing*{\subsection}{0pt}{1.25\baselineskip}{0.5\baselineskip}
+\titlespacing*{\subsubsection}{0pt}{\baselineskip}{0.4\baselineskip}
+
+% List formatting
+\setlist{itemsep=3pt, parsep=2pt, topsep=6pt}
+
+% =============================================================================
+% UDL ENVIRONMENTS (Universal Design for Learning)
+% =============================================================================
+
+% Section Overview — Advance Organizer (UDL Guideline 3.1: Activate prior knowledge)
+\usepackage{tcolorbox}
+\newtcolorbox{sectionoverview}{
+    blanker,
+    borderline west={3pt}{0pt}{navyheading!40},
+    left=12pt,
+    top=4pt,
+    bottom=4pt,
+    before skip=\baselineskip,
+    after skip=\baselineskip
+}
+
+\begin{document}
+
+% --- MEMO HEADER BLOCK ---
+\thispagestyle{empty}
+
+\begin{center}
+{\color{rulecolor}\rule{\textwidth}{1.5pt}}
+\end{center}
+
+\vspace{0.3cm}
+
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\textsf{\textbf{TO:}}        & {{MEMO_TO}} \\[4pt]
+\textsf{\textbf{FROM:}}      & {{MEMO_FROM}} \\[4pt]
+\textsf{\textbf{DATE:}}      & {{DATE}} \\[4pt]
+\textsf{\textbf{SUBJECT:}}   & {{MEMO_SUBJECT}} \\[4pt]
+\textsf{\textbf{REFERENCE:}} & {{MEMO_REFERENCE}} \\
+\end{tabularx}
+
+\vspace{0.3cm}
+
+\begin{center}
+{\color{rulecolor}\rule{\textwidth}{1.5pt}}
+\end{center}
+
+\vspace{0.5cm}
+
+% --- TITLE ---
+\begin{center}
+{\LARGE\bfseries\sffamily\color{navyheading} {{TITLE}}}\\[0.4cm]
+{\large\sffamily {{AUTHOR}} \\ {{INSTITUTION}}}
+\end{center}
+
+\vspace{0.5cm}
+
+% --- EXECUTIVE SUMMARY / ABSTRACT ---
+{{ABSTRACT}}
+
+% --- TABLE OF CONTENTS ---
+\tableofcontents
+\newpage
+
+% --- MAIN CONTENT ---
+{{SECTIONS}}
+
+\end{document}

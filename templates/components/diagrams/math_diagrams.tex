@@ -1,0 +1,764 @@
+% math_diagrams.tex - Scientific/mathematical diagram macros for Paperforge
+% Requires: _colors.tex, _styles.tex loaded first
+%
+% Macros provided:
+%   \forcediagram{object}{f1}{a1}{f2}{a2}           - Force vector diagram
+%   \equilibriumforces{obj}{left}{right}{up}{down}  - Balanced forces
+%   \pressurevesselcross{R}{t}{P}                   - Pressure vessel cross-section
+%   \shellstressdiagram{R}{t}{type}                 - Shell stress element
+%   \orbitellipse{body}{orbit}{rp}{ra}              - Elliptical orbit
+%   \lagrangepoints{body1}{body2}                   - Lagrange point diagram
+%   \transferorbit{origin}{dest}{label}             - Transfer trajectory
+%   \statespaceenvelope{x}{y}{safe}{danger}         - Operating envelope
+%   \envelopebounds{x}{y}{limit}{point}             - Simplified state space
+%   \scalingcubes{small}{large}{ratio}              - Geometric scaling
+%   \proportionbar{q1}{v1}{q2}{v2}                  - Proportion comparison
+%   \rotatingframe{center}{r}{omega}{accel}         - Centripetal dynamics
+%   \radiationshield{layers}{t}{dose}               - Attenuation diagram
+%   \stressstrain{yield}{ultimate}                  - Stress-strain curve
+%
+% Dark theme variants: Add "dark" suffix (e.g., \forcediagramdark)
+
+% ============================================================================
+% FORCE VECTOR DIAGRAM
+% ============================================================================
+% Usage: \forcediagram{Satellite}{$F_g$}{270}{$F_c$}{90}
+\newcommand{\forcediagram}[5]{%
+\begin{center}
+\begin{tikzpicture}
+    % Central object
+    \node[diagram box, minimum width=2cm, minimum height=1.2cm] (obj) at (0,0) {#1};
+    % Force 1
+    \draw[diagram arrow error, line width=1.5pt] (obj.center) -- ++({#3}:1.8cm)
+        node[pos=1.1, font=\small\bfseries] {#2};
+    % Force 2
+    \draw[diagram arrow primary, line width=1.5pt] (obj.center) -- ++({#5}:1.8cm)
+        node[pos=1.1, font=\small\bfseries] {#4};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% FORCE DIAGRAM (Dark Theme)
+% ============================================================================
+\newcommand{\forcediagramdark}[5]{%
+\begin{center}
+\begin{tikzpicture}
+    \node[diagram box dark, minimum width=2cm, minimum height=1.2cm] (obj) at (0,0) {#1};
+    \draw[-{Stealth[length=4mm, width=3mm]}, line width=1.5pt, color=diagramDarkError]
+        (obj.center) -- ++({#3}:1.8cm) node[pos=1.1, font=\small\bfseries, text=diagramDarkError] {#2};
+    \draw[-{Stealth[length=4mm, width=3mm]}, line width=1.5pt, color=diagramDarkPrimary]
+        (obj.center) -- ++({#5}:1.8cm) node[pos=1.1, font=\small\bfseries, text=diagramDarkPrimary] {#4};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% EQUILIBRIUM FORCES (Four Cardinal Directions)
+% ============================================================================
+% Usage: \equilibriumforces{Structure}{$T$}{$T$}{$F_{lift}$}{$mg$}
+\newcommand{\equilibriumforces}[5]{%
+\begin{center}
+\begin{tikzpicture}
+    % Central object
+    \node[diagram box, minimum width=1.8cm, minimum height=1.2cm] (obj) at (0,0) {#1};
+    % Left force
+    \ifx&#2&\else
+        \draw[diagram arrow error, line width=1.5pt] (obj.west) -- ++(-1.5,0)
+            node[left, font=\small\bfseries] {#2};
+    \fi
+    % Right force
+    \ifx&#3&\else
+        \draw[diagram arrow error, line width=1.5pt] (obj.east) -- ++(1.5,0)
+            node[right, font=\small\bfseries] {#3};
+    \fi
+    % Up force
+    \ifx&#4&\else
+        \draw[diagram arrow success, line width=1.5pt] (obj.north) -- ++(0,1.5)
+            node[above, font=\small\bfseries] {#4};
+    \fi
+    % Down force
+    \ifx&#5&\else
+        \draw[diagram arrow primary, line width=1.5pt] (obj.south) -- ++(0,-1.5)
+            node[below, font=\small\bfseries] {#5};
+    \fi
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% EQUILIBRIUM FORCES (Dark Theme)
+% ============================================================================
+\newcommand{\equilibriumforcesdark}[5]{%
+\begin{center}
+\begin{tikzpicture}
+    \node[diagram box dark, minimum width=1.8cm, minimum height=1.2cm] (obj) at (0,0) {#1};
+    \ifx&#2&\else
+        \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkError]
+            (obj.west) -- ++(-1.5,0) node[left, font=\small\bfseries, text=diagramDarkError] {#2};
+    \fi
+    \ifx&#3&\else
+        \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkError]
+            (obj.east) -- ++(1.5,0) node[right, font=\small\bfseries, text=diagramDarkError] {#3};
+    \fi
+    \ifx&#4&\else
+        \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkSuccess]
+            (obj.north) -- ++(0,1.5) node[above, font=\small\bfseries, text=diagramDarkSuccess] {#4};
+    \fi
+    \ifx&#5&\else
+        \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkPrimary]
+            (obj.south) -- ++(0,-1.5) node[below, font=\small\bfseries, text=diagramDarkPrimary] {#5};
+    \fi
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% PRESSURE VESSEL CROSS-SECTION
+% ============================================================================
+% Usage: \pressurevesselcross{$R$}{$t$}{$P_{int}$}
+\newcommand{\pressurevesselcross}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    % Outer circle (wall)
+    \fill[diagramSurfaceAlt] (0,0) circle (2.2cm);
+    % Inner circle (hollow interior)
+    \fill[white] (0,0) circle (1.8cm);
+    % Wall outline
+    \draw[diagramBorder, thick] (0,0) circle (2.2cm);
+    \draw[diagramBorder, thick] (0,0) circle (1.8cm);
+    % Pressure arrows pointing inward from the wall
+    \foreach \angle in {0,45,90,135,180,225,270,315} {
+        \draw[diagram arrow primary, line width=1pt]
+            ({\angle}:1.3cm) -- ({\angle}:0.7cm);
+    }
+    % Pressure label at center
+    \node[font=\small\bfseries, text=diagramPrimary] at (0,0) {#3};
+    % Radius dimension line
+    \draw[|<->|, thin, color=diagramTextMuted] (0,0) -- (0:1.8cm)
+        node[midway, above, font=\scriptsize] {#1};
+    % Thickness dimension
+    \draw[|<->|, thin, color=diagramTextMuted] (45:1.8cm) -- (45:2.2cm)
+        node[midway, above right, font=\scriptsize] {#2};
+    % Stress formula annotation
+    \node[font=\scriptsize, text=diagramTextMuted, anchor=west] at (2.8,0)
+        {$\sigma = \frac{PR}{t}$};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% PRESSURE VESSEL (Dark Theme)
+% ============================================================================
+\newcommand{\pressurevesselcrossdark}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    \fill[diagramDarkSurface] (0,0) circle (2.2cm);
+    \fill[diagramDarkBg] (0,0) circle (1.8cm);
+    \draw[diagramDarkBorder, thick] (0,0) circle (2.2cm);
+    \draw[diagramDarkBorder, thick] (0,0) circle (1.8cm);
+    \foreach \angle in {0,45,90,135,180,225,270,315} {
+        \draw[-{Stealth[length=2mm]}, thick, color=diagramDarkPrimary]
+            ({\angle}:1.3cm) -- ({\angle}:0.7cm);
+    }
+    \node[font=\small\bfseries, text=diagramDarkPrimary] at (0,0) {#3};
+    \draw[|<->|, thin, color=diagramDarkTextMuted] (0,0) -- (0:1.8cm)
+        node[midway, above, font=\scriptsize, text=diagramDarkTextMuted] {#1};
+    \draw[|<->|, thin, color=diagramDarkTextMuted] (45:1.8cm) -- (45:2.2cm)
+        node[midway, above right, font=\scriptsize, text=diagramDarkTextMuted] {#2};
+    \node[font=\scriptsize, text=diagramDarkTextMuted, anchor=west] at (2.8,0)
+        {$\sigma = \frac{PR}{t}$};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% SHELL STRESS DIAGRAM (Curved Element)
+% ============================================================================
+% Usage: \shellstressdiagram{$R$}{$t$}{hoop} or {meridional} or {both}
+\newcommand{\shellstressdiagram}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    % Draw curved shell element (arc)
+    \fill[diagramSurfaceAlt] (0,0) arc (180:0:2cm and 0.8cm) --
+        ++(0,-0.3) arc (0:180:2cm and 0.8cm) -- cycle;
+    \draw[diagramBorder, thick] (0,0) arc (180:0:2cm and 0.8cm);
+    \draw[diagramBorder, thick] (0,-0.3) arc (180:0:2cm and 0.8cm);
+    \draw[diagramBorder] (0,0) -- (0,-0.3);
+    \draw[diagramBorder] (4,0) -- (4,-0.3);
+    % Stress arrows based on type
+    \ifnum\pdfstrcmp{#3}{hoop}=0
+        % Hoop stress (circumferential, along the arc)
+        \draw[diagram arrow error, line width=1.5pt] (-0.3,-0.15) -- (-1,-0.15)
+            node[left, font=\scriptsize] {$\sigma_\theta$};
+        \draw[diagram arrow error, line width=1.5pt] (4.3,-0.15) -- (5,-0.15)
+            node[right, font=\scriptsize] {$\sigma_\theta$};
+    \else\ifnum\pdfstrcmp{#3}{meridional}=0
+        % Meridional stress (along the length)
+        \draw[diagram arrow primary, line width=1.5pt] (2,0.5) -- (2,1.2)
+            node[above, font=\scriptsize] {$\sigma_\phi$};
+        \draw[diagram arrow primary, line width=1.5pt] (2,-0.8) -- (2,-1.5)
+            node[below, font=\scriptsize] {$\sigma_\phi$};
+    \else
+        % Both stresses
+        \draw[diagram arrow error, line width=1.5pt] (-0.3,-0.15) -- (-1,-0.15)
+            node[left, font=\scriptsize] {$\sigma_\theta$};
+        \draw[diagram arrow error, line width=1.5pt] (4.3,-0.15) -- (5,-0.15)
+            node[right, font=\scriptsize] {$\sigma_\theta$};
+        \draw[diagram arrow primary, line width=1.5pt] (2,0.5) -- (2,1.2)
+            node[above, font=\scriptsize] {$\sigma_\phi$};
+        \draw[diagram arrow primary, line width=1.5pt] (2,-0.8) -- (2,-1.5)
+            node[below, font=\scriptsize] {$\sigma_\phi$};
+    \fi\fi
+    % Labels
+    \node[font=\scriptsize, text=diagramTextMuted] at (2,-1.8) {Radius: #1, Thickness: #2};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% SHELL STRESS (Dark Theme)
+% ============================================================================
+\newcommand{\shellstressdiagramdark}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    \fill[diagramDarkSurface] (0,0) arc (180:0:2cm and 0.8cm) --
+        ++(0,-0.3) arc (0:180:2cm and 0.8cm) -- cycle;
+    \draw[diagramDarkBorder, thick] (0,0) arc (180:0:2cm and 0.8cm);
+    \draw[diagramDarkBorder, thick] (0,-0.3) arc (180:0:2cm and 0.8cm);
+    \draw[diagramDarkBorder] (0,0) -- (0,-0.3);
+    \draw[diagramDarkBorder] (4,0) -- (4,-0.3);
+    \ifnum\pdfstrcmp{#3}{hoop}=0
+        \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkError]
+            (-0.3,-0.15) -- (-1,-0.15) node[left, font=\scriptsize, text=diagramDarkError] {$\sigma_\theta$};
+        \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkError]
+            (4.3,-0.15) -- (5,-0.15) node[right, font=\scriptsize, text=diagramDarkError] {$\sigma_\theta$};
+    \else\ifnum\pdfstrcmp{#3}{meridional}=0
+        \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkPrimary]
+            (2,0.5) -- (2,1.2) node[above, font=\scriptsize, text=diagramDarkPrimary] {$\sigma_\phi$};
+        \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkPrimary]
+            (2,-0.8) -- (2,-1.5) node[below, font=\scriptsize, text=diagramDarkPrimary] {$\sigma_\phi$};
+    \else
+        \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkError]
+            (-0.3,-0.15) -- (-1,-0.15) node[left, font=\scriptsize, text=diagramDarkError] {$\sigma_\theta$};
+        \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkError]
+            (4.3,-0.15) -- (5,-0.15) node[right, font=\scriptsize, text=diagramDarkError] {$\sigma_\theta$};
+        \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkPrimary]
+            (2,0.5) -- (2,1.2) node[above, font=\scriptsize, text=diagramDarkPrimary] {$\sigma_\phi$};
+        \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkPrimary]
+            (2,-0.8) -- (2,-1.5) node[below, font=\scriptsize, text=diagramDarkPrimary] {$\sigma_\phi$};
+    \fi\fi
+    \node[font=\scriptsize, text=diagramDarkTextMuted] at (2,-1.8) {Radius: #1, Thickness: #2};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% ELLIPTICAL ORBIT
+% ============================================================================
+% Usage: \orbitellipse{Earth}{Transfer orbit}{$r_p$}{$r_a$}
+\newcommand{\orbitellipse}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Central body at focus
+    \fill[diagramPrimary] (-0.8,0) circle (0.4cm);
+    \node[font=\scriptsize, text=white] at (-0.8,0) {#1};
+    % Elliptical orbit
+    \draw[diagramSecondary, thick] (0,0) ellipse (2.5cm and 1.5cm);
+    % Periapsis marker (closest point)
+    \fill[diagramSuccess] (-2.5,0) circle (3pt);
+    \node[font=\scriptsize, anchor=east] at (-2.8,0) {#3};
+    % Apoapsis marker (farthest point)
+    \fill[diagramError] (2.5,0) circle (3pt);
+    \node[font=\scriptsize, anchor=west] at (2.8,0) {#4};
+    % Velocity arrows
+    \draw[diagram arrow success, line width=1pt] (-2.5,0) -- (-2.5,0.8)
+        node[above, font=\tiny] {$v_p$};
+    \draw[diagram arrow error, line width=1pt] (2.5,0) -- (2.5,0.5)
+        node[above, font=\tiny] {$v_a$};
+    % Orbit label
+    \node[font=\scriptsize, text=diagramSecondary] at (0,-2) {#2};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% ELLIPTICAL ORBIT (Dark Theme)
+% ============================================================================
+\newcommand{\orbitellipsedark}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    \fill[diagramDarkPrimary] (-0.8,0) circle (0.4cm);
+    \node[font=\scriptsize, text=diagramDarkBg] at (-0.8,0) {#1};
+    \draw[diagramDarkAccent, thick] (0,0) ellipse (2.5cm and 1.5cm);
+    \fill[diagramDarkSuccess] (-2.5,0) circle (3pt);
+    \node[font=\scriptsize, text=diagramDarkText, anchor=east] at (-2.8,0) {#3};
+    \fill[diagramDarkError] (2.5,0) circle (3pt);
+    \node[font=\scriptsize, text=diagramDarkText, anchor=west] at (2.8,0) {#4};
+    \draw[-{Stealth[length=2mm]}, thick, color=diagramDarkSuccess] (-2.5,0) -- (-2.5,0.8)
+        node[above, font=\tiny, text=diagramDarkText] {$v_p$};
+    \draw[-{Stealth[length=2mm]}, thick, color=diagramDarkError] (2.5,0) -- (2.5,0.5)
+        node[above, font=\tiny, text=diagramDarkText] {$v_a$};
+    \node[font=\scriptsize, text=diagramDarkAccent] at (0,-2) {#2};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% LAGRANGE POINTS
+% ============================================================================
+% Usage: \lagrangepoints{Sun}{Earth}
+\newcommand{\lagrangepoints}[2]{%
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    % Primary body (larger)
+    \fill[diagramAccent] (-2,0) circle (0.5cm);
+    \node[font=\scriptsize, below] at (-2,-0.7) {#1};
+    % Secondary body (smaller)
+    \fill[diagramPrimary] (2,0) circle (0.3cm);
+    \node[font=\scriptsize, below] at (2,-0.5) {#2};
+    % Orbit of secondary (dashed)
+    \draw[dashed, diagramNeutral] (-2,0) circle (4cm);
+    % L1 (between bodies)
+    \fill[diagramError] (1,0) circle (4pt);
+    \node[font=\scriptsize, above] at (1,0.2) {L1};
+    % L2 (beyond secondary)
+    \fill[diagramError] (3,0) circle (4pt);
+    \node[font=\scriptsize, above] at (3,0.2) {L2};
+    % L3 (opposite side)
+    \fill[diagramError] (-6,0) circle (4pt);
+    \node[font=\scriptsize, above] at (-6,0.2) {L3};
+    % L4 (leading, 60 degrees ahead)
+    \fill[diagramSuccess] ($(−2,0)+(60:4)$) circle (4pt);
+    \node[font=\scriptsize, above] at ($(−2,0)+(60:4)+(0,0.2)$) {L4};
+    % L5 (trailing, 60 degrees behind)
+    \fill[diagramSuccess] ($(-2,0)+(-60:4)$) circle (4pt);
+    \node[font=\scriptsize, below] at ($(-2,0)+(-60:4)+(0,-0.2)$) {L5};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% LAGRANGE POINTS (Dark Theme)
+% ============================================================================
+\newcommand{\lagrangepointsdark}[2]{%
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+    \fill[diagramDarkAccent] (-2,0) circle (0.5cm);
+    \node[font=\scriptsize, below, text=diagramDarkText] at (-2,-0.7) {#1};
+    \fill[diagramDarkPrimary] (2,0) circle (0.3cm);
+    \node[font=\scriptsize, below, text=diagramDarkText] at (2,-0.5) {#2};
+    \draw[dashed, diagramDarkBorder] (-2,0) circle (4cm);
+    \fill[diagramDarkError] (1,0) circle (4pt);
+    \node[font=\scriptsize, above, text=diagramDarkText] at (1,0.2) {L1};
+    \fill[diagramDarkError] (3,0) circle (4pt);
+    \node[font=\scriptsize, above, text=diagramDarkText] at (3,0.2) {L2};
+    \fill[diagramDarkError] (-6,0) circle (4pt);
+    \node[font=\scriptsize, above, text=diagramDarkText] at (-6,0.2) {L3};
+    \fill[diagramDarkSuccess] ($(-2,0)+(60:4)$) circle (4pt);
+    \node[font=\scriptsize, above, text=diagramDarkText] at ($(-2,0)+(60:4)+(0,0.2)$) {L4};
+    \fill[diagramDarkSuccess] ($(-2,0)+(-60:4)$) circle (4pt);
+    \node[font=\scriptsize, below, text=diagramDarkText] at ($(-2,0)+(-60:4)+(0,-0.2)$) {L5};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% TRANSFER ORBIT
+% ============================================================================
+% Usage: \transferorbit{Earth orbit}{Mars orbit}{Hohmann transfer}
+\newcommand{\transferorbit}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    % Central body (Sun)
+    \fill[diagramAccent] (0,0) circle (0.4cm);
+    % Inner orbit
+    \draw[diagramPrimary, thick] (0,0) circle (1.5cm);
+    \node[font=\scriptsize, text=diagramPrimary] at (0,-1.8) {#1};
+    % Outer orbit
+    \draw[diagramSecondary, thick] (0,0) circle (3cm);
+    \node[font=\scriptsize, text=diagramSecondary] at (0,-3.3) {#2};
+    % Transfer ellipse (half)
+    \draw[diagramError, thick, dashed] (1.5,0) arc (0:180:2.25cm and 1.5cm);
+    % Direction arrow on transfer
+    \draw[diagram arrow error] (0,1.5) -- (0.3,1.7);
+    % Starting point
+    \fill[diagramPrimary] (1.5,0) circle (4pt);
+    % Ending point
+    \fill[diagramSecondary] (-3,0) circle (4pt);
+    % Label
+    \node[font=\scriptsize, text=diagramError] at (0,2.2) {#3};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% TRANSFER ORBIT (Dark Theme)
+% ============================================================================
+\newcommand{\transferorbitdark}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    \fill[diagramDarkAccent] (0,0) circle (0.4cm);
+    \draw[diagramDarkPrimary, thick] (0,0) circle (1.5cm);
+    \node[font=\scriptsize, text=diagramDarkPrimary] at (0,-1.8) {#1};
+    \draw[diagramDarkBorder, thick] (0,0) circle (3cm);
+    \node[font=\scriptsize, text=diagramDarkBorder] at (0,-3.3) {#2};
+    \draw[diagramDarkError, thick, dashed] (1.5,0) arc (0:180:2.25cm and 1.5cm);
+    \draw[-{Stealth[length=2mm]}, thick, color=diagramDarkError] (0,1.5) -- (0.3,1.7);
+    \fill[diagramDarkPrimary] (1.5,0) circle (4pt);
+    \fill[diagramDarkBorder] (-3,0) circle (4pt);
+    \node[font=\scriptsize, text=diagramDarkError] at (0,2.2) {#3};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% STATE SPACE / OPERATING ENVELOPE
+% ============================================================================
+% Usage: \statespaceenvelope{Stress $\sigma$}{Cycles $N$}{Safe}{Fatigue failure}
+\newcommand{\statespaceenvelope}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Axes
+    \draw[diagram arrow, line width=1pt] (0,0) -- (6,0) node[right, font=\small] {#1};
+    \draw[diagram arrow, line width=1pt] (0,0) -- (0,4) node[above, font=\small] {#2};
+    % Safe region (curved boundary)
+    \fill[diagramSuccess!20] (0,0) -- (0,3.5) .. controls (2,3.2) and (4,2) .. (5.5,0.5) -- (5.5,0) -- cycle;
+    \draw[diagramSuccess, thick] (0,3.5) .. controls (2,3.2) and (4,2) .. (5.5,0.5);
+    % Danger region label
+    \fill[diagramError!15] (0,3.5) .. controls (2,3.2) and (4,2) .. (5.5,0.5) -- (5.5,3.8) -- (0,3.8) -- cycle;
+    % Labels
+    \node[font=\scriptsize, text=diagramSuccess] at (2,1) {#3};
+    \node[font=\scriptsize, text=diagramError] at (3.5,3.2) {#4};
+    % Operating point marker
+    \fill[diagramPrimary] (1.5,1.5) circle (4pt);
+    \node[font=\tiny, anchor=south west] at (1.6,1.6) {Current};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% STATE SPACE ENVELOPE (Dark Theme)
+% ============================================================================
+\newcommand{\statespaceenvelopedark}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    \draw[-{Stealth[length=3mm]}, line width=1pt, color=diagramDarkBorder] (0,0) -- (6,0)
+        node[right, font=\small, text=diagramDarkText] {#1};
+    \draw[-{Stealth[length=3mm]}, line width=1pt, color=diagramDarkBorder] (0,0) -- (0,4)
+        node[above, font=\small, text=diagramDarkText] {#2};
+    \fill[diagramDarkSuccess!30] (0,0) -- (0,3.5) .. controls (2,3.2) and (4,2) .. (5.5,0.5) -- (5.5,0) -- cycle;
+    \draw[diagramDarkSuccess, thick] (0,3.5) .. controls (2,3.2) and (4,2) .. (5.5,0.5);
+    \fill[diagramDarkError!20] (0,3.5) .. controls (2,3.2) and (4,2) .. (5.5,0.5) -- (5.5,3.8) -- (0,3.8) -- cycle;
+    \node[font=\scriptsize, text=diagramDarkSuccess] at (2,1) {#3};
+    \node[font=\scriptsize, text=diagramDarkError] at (3.5,3.2) {#4};
+    \fill[diagramDarkPrimary] (1.5,1.5) circle (4pt);
+    \node[font=\tiny, text=diagramDarkText, anchor=south west] at (1.6,1.6) {Current};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% ENVELOPE BOUNDS (Simplified)
+% ============================================================================
+% Usage: \envelopebounds{Velocity}{Altitude}{Entry corridor}{Current state}
+\newcommand{\envelopebounds}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Axes
+    \draw[diagram arrow, line width=1pt] (0,0) -- (5,0) node[right, font=\small] {#1};
+    \draw[diagram arrow, line width=1pt] (0,0) -- (0,3.5) node[above, font=\small] {#2};
+    % Rectangular envelope
+    \fill[diagramSuccess!15] (0.5,0.5) rectangle (4,2.5);
+    \draw[diagramSuccess, thick] (0.5,0.5) rectangle (4,2.5);
+    % Envelope label
+    \node[font=\scriptsize, text=diagramSuccess] at (2.25,2.8) {#3};
+    % Operating point
+    \fill[diagramPrimary] (2,1.5) circle (5pt);
+    \node[font=\scriptsize, anchor=west] at (2.2,1.5) {#4};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% ENVELOPE BOUNDS (Dark Theme)
+% ============================================================================
+\newcommand{\envelopeboundsdark}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    \draw[-{Stealth[length=3mm]}, line width=1pt, color=diagramDarkBorder] (0,0) -- (5,0)
+        node[right, font=\small, text=diagramDarkText] {#1};
+    \draw[-{Stealth[length=3mm]}, line width=1pt, color=diagramDarkBorder] (0,0) -- (0,3.5)
+        node[above, font=\small, text=diagramDarkText] {#2};
+    \fill[diagramDarkSuccess!25] (0.5,0.5) rectangle (4,2.5);
+    \draw[diagramDarkSuccess, thick] (0.5,0.5) rectangle (4,2.5);
+    \node[font=\scriptsize, text=diagramDarkSuccess] at (2.25,2.8) {#3};
+    \fill[diagramDarkPrimary] (2,1.5) circle (5pt);
+    \node[font=\scriptsize, text=diagramDarkText, anchor=west] at (2.2,1.5) {#4};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% SCALING CUBES (Geometric Scaling)
+% ============================================================================
+% Usage: \scalingcubes{$r$}{$2r$}{Mass $\propto r^3$}
+\newcommand{\scalingcubes}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    % Small cube
+    \draw[diagramPrimary, thick, fill=diagramPrimary!20] (0,0) rectangle (1,1);
+    \draw[diagramPrimary, thick] (0.3,0.3) rectangle (1.3,1.3);
+    \draw[diagramPrimary, thick] (0,1) -- (0.3,1.3);
+    \draw[diagramPrimary, thick] (1,1) -- (1.3,1.3);
+    \draw[diagramPrimary, thick] (1,0) -- (1.3,0.3);
+    \node[font=\scriptsize, below] at (0.5,-0.2) {#1};
+    % Arrow
+    \draw[diagram arrow primary, line width=1.5pt] (2,0.7) -- (3,0.7);
+    % Large cube
+    \draw[diagramSecondary, thick, fill=diagramSecondary!15] (4,0) rectangle (6,2);
+    \draw[diagramSecondary, thick] (4.5,0.5) rectangle (6.5,2.5);
+    \draw[diagramSecondary, thick] (4,2) -- (4.5,2.5);
+    \draw[diagramSecondary, thick] (6,2) -- (6.5,2.5);
+    \draw[diagramSecondary, thick] (6,0) -- (6.5,0.5);
+    \node[font=\scriptsize, below] at (5,-0.2) {#2};
+    % Ratio annotation
+    \node[font=\scriptsize, text=diagramTextMuted, align=center] at (3.25,-0.8) {#3};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% SCALING CUBES (Dark Theme)
+% ============================================================================
+\newcommand{\scalingcubesdark}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    \draw[diagramDarkPrimary, thick, fill=diagramDarkPrimary!30] (0,0) rectangle (1,1);
+    \draw[diagramDarkPrimary, thick] (0.3,0.3) rectangle (1.3,1.3);
+    \draw[diagramDarkPrimary, thick] (0,1) -- (0.3,1.3);
+    \draw[diagramDarkPrimary, thick] (1,1) -- (1.3,1.3);
+    \draw[diagramDarkPrimary, thick] (1,0) -- (1.3,0.3);
+    \node[font=\scriptsize, below, text=diagramDarkText] at (0.5,-0.2) {#1};
+    \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkPrimary] (2,0.7) -- (3,0.7);
+    \draw[diagramDarkAccent, thick, fill=diagramDarkAccent!20] (4,0) rectangle (6,2);
+    \draw[diagramDarkAccent, thick] (4.5,0.5) rectangle (6.5,2.5);
+    \draw[diagramDarkAccent, thick] (4,2) -- (4.5,2.5);
+    \draw[diagramDarkAccent, thick] (6,2) -- (6.5,2.5);
+    \draw[diagramDarkAccent, thick] (6,0) -- (6.5,0.5);
+    \node[font=\scriptsize, below, text=diagramDarkText] at (5,-0.2) {#2};
+    \node[font=\scriptsize, text=diagramDarkTextMuted, align=center] at (3.25,-0.8) {#3};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% PROPORTION BAR
+% ============================================================================
+% Usage: \proportionbar{Surface Area}{4}{Volume}{8}
+\newcommand{\proportionbar}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Calculate bar widths (normalize to max 6cm)
+    \pgfmathsetmacro{\maxval}{max(#2,#4)}
+    \pgfmathsetmacro{\barA}{6 * #2 / \maxval}
+    \pgfmathsetmacro{\barB}{6 * #4 / \maxval}
+    % First bar
+    \node[font=\small, anchor=east] at (-0.2,1) {#1};
+    \fill[diagramPrimary] (0,0.7) rectangle (\barA,1.3);
+    \node[font=\scriptsize\bfseries, text=white, anchor=west] at (0.2,1) {#2};
+    % Second bar
+    \node[font=\small, anchor=east] at (-0.2,0) {#3};
+    \fill[diagramSecondary] (0,-0.3) rectangle (\barB,0.3);
+    \node[font=\scriptsize\bfseries, text=white, anchor=west] at (0.2,0) {#4};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% PROPORTION BAR (Dark Theme)
+% ============================================================================
+\newcommand{\proportionbardark}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    \pgfmathsetmacro{\maxval}{max(#2,#4)}
+    \pgfmathsetmacro{\barA}{6 * #2 / \maxval}
+    \pgfmathsetmacro{\barB}{6 * #4 / \maxval}
+    \node[font=\small, anchor=east, text=diagramDarkText] at (-0.2,1) {#1};
+    \fill[diagramDarkPrimary] (0,0.7) rectangle (\barA,1.3);
+    \node[font=\scriptsize\bfseries, text=diagramDarkBg, anchor=west] at (0.2,1) {#2};
+    \node[font=\small, anchor=east, text=diagramDarkText] at (-0.2,0) {#3};
+    \fill[diagramDarkAccent] (0,-0.3) rectangle (\barB,0.3);
+    \node[font=\scriptsize\bfseries, text=diagramDarkBg, anchor=west] at (0.2,0) {#4};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% ROTATING FRAME (Centripetal Acceleration)
+% ============================================================================
+% Usage: \rotatingframe{Axis}{$r = 500$ m}{$\omega$}{$a_c = \omega^2 r$}
+\newcommand{\rotatingframe}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Central axis
+    \fill[diagramNeutral] (0,0) circle (3pt);
+    \node[font=\scriptsize, below] at (0,-0.3) {#1};
+    % Circular path (dashed)
+    \draw[dashed, diagramNeutral, thick] (0,0) circle (2cm);
+    % Rotating mass
+    \fill[diagramPrimary] (2,0) circle (6pt);
+    % Radius line
+    \draw[thick, diagramBorder] (0,0) -- (2,0);
+    \node[font=\scriptsize, above] at (1,0.1) {#2};
+    % Centripetal acceleration (inward arrow)
+    \draw[diagram arrow error, line width=1.5pt] (2,0) -- (1.2,0);
+    \node[font=\scriptsize, text=diagramError, below] at (1.6,-0.3) {$a_c$};
+    % Velocity (tangent arrow)
+    \draw[diagram arrow success, line width=1.5pt] (2,0) -- (2,1);
+    \node[font=\scriptsize, text=diagramSuccess, right] at (2.1,0.5) {$v$};
+    % Angular velocity arc
+    \draw[diagram arrow primary, line width=1pt] (0.5,0) arc (0:60:0.5cm);
+    \node[font=\scriptsize, text=diagramPrimary] at (0.8,0.4) {#3};
+    % Formula annotation
+    \node[font=\scriptsize, text=diagramTextMuted] at (0,-2.5) {#4};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% ROTATING FRAME (Dark Theme)
+% ============================================================================
+\newcommand{\rotatingframedark}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    \fill[diagramDarkBorder] (0,0) circle (3pt);
+    \node[font=\scriptsize, below, text=diagramDarkText] at (0,-0.3) {#1};
+    \draw[dashed, diagramDarkBorder, thick] (0,0) circle (2cm);
+    \fill[diagramDarkPrimary] (2,0) circle (6pt);
+    \draw[thick, diagramDarkBorder] (0,0) -- (2,0);
+    \node[font=\scriptsize, above, text=diagramDarkText] at (1,0.1) {#2};
+    \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkError] (2,0) -- (1.2,0);
+    \node[font=\scriptsize, text=diagramDarkError, below] at (1.6,-0.3) {$a_c$};
+    \draw[-{Stealth[length=3mm]}, line width=1.5pt, color=diagramDarkSuccess] (2,0) -- (2,1);
+    \node[font=\scriptsize, text=diagramDarkSuccess, right] at (2.1,0.5) {$v$};
+    \draw[-{Stealth[length=2mm]}, line width=1pt, color=diagramDarkPrimary] (0.5,0) arc (0:60:0.5cm);
+    \node[font=\scriptsize, text=diagramDarkPrimary] at (0.8,0.4) {#3};
+    \node[font=\scriptsize, text=diagramDarkTextMuted] at (0,-2.5) {#4};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% RADIATION SHIELDING (Attenuation)
+% ============================================================================
+% Usage: \radiationshield{3}{$x$ cm}{$I = I_0 e^{-\mu x}$}
+\newcommand{\radiationshield}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    % Shield layers
+    \fill[diagramSurfaceAlt] (2,0) rectangle (2.5,3);
+    \fill[diagramNeutral!30] (2.5,0) rectangle (3,3);
+    \ifnum#1>2
+        \fill[diagramNeutral!50] (3,0) rectangle (3.5,3);
+    \fi
+    \ifnum#1>3
+        \fill[diagramNeutral!70] (3.5,0) rectangle (4,3);
+    \fi
+    % Incoming radiation arrows (strong)
+    \foreach \y in {0.5,1.5,2.5} {
+        \draw[diagram arrow error, line width=2pt] (0,\y) -- (1.8,\y);
+    }
+    \node[font=\scriptsize, text=diagramError] at (1,3.3) {$I_0$};
+    % Outgoing radiation (weaker)
+    \pgfmathsetmacro{\outx}{2 + 0.5*#1 + 0.3}
+    \draw[diagram arrow error, line width=0.8pt] (\outx,1.5) -- ({\outx+1},1.5);
+    \node[font=\scriptsize, text=diagramError] at ({\outx+0.8},2) {$I$};
+    % Thickness label
+    \draw[|<->|, thin, color=diagramTextMuted] (2,-0.3) -- ({2+0.5*#1},-0.3)
+        node[midway, below, font=\scriptsize] {#2};
+    % Formula
+    \node[font=\scriptsize, text=diagramTextMuted] at (3,-1) {#3};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% RADIATION SHIELDING (Dark Theme)
+% ============================================================================
+\newcommand{\radiationshielddark}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    \fill[diagramDarkSurface] (2,0) rectangle (2.5,3);
+    \fill[diagramDarkBorder!50] (2.5,0) rectangle (3,3);
+    \ifnum#1>2
+        \fill[diagramDarkBorder!70] (3,0) rectangle (3.5,3);
+    \fi
+    \ifnum#1>3
+        \fill[diagramDarkBorder] (3.5,0) rectangle (4,3);
+    \fi
+    \foreach \y in {0.5,1.5,2.5} {
+        \draw[-{Stealth[length=3mm]}, line width=2pt, color=diagramDarkError] (0,\y) -- (1.8,\y);
+    }
+    \node[font=\scriptsize, text=diagramDarkError] at (1,3.3) {$I_0$};
+    \pgfmathsetmacro{\outx}{2 + 0.5*#1 + 0.3}
+    \draw[-{Stealth[length=2mm]}, line width=0.8pt, color=diagramDarkError] (\outx,1.5) -- ({\outx+1},1.5);
+    \node[font=\scriptsize, text=diagramDarkError] at ({\outx+0.8},2) {$I$};
+    \draw[|<->|, thin, color=diagramDarkTextMuted] (2,-0.3) -- ({2+0.5*#1},-0.3)
+        node[midway, below, font=\scriptsize, text=diagramDarkTextMuted] {#2};
+    \node[font=\scriptsize, text=diagramDarkTextMuted] at (3,-1) {#3};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% STRESS-STRAIN CURVE
+% ============================================================================
+% Usage: \stressstrain{$\sigma_y = 250$ MPa}{$\sigma_u = 400$ MPa}
+\newcommand{\stressstrain}[2]{%
+\begin{center}
+\begin{tikzpicture}
+    % Axes
+    \draw[diagram arrow, line width=1pt] (0,0) -- (6,0) node[right, font=\small] {Strain $\varepsilon$};
+    \draw[diagram arrow, line width=1pt] (0,0) -- (0,4) node[above, font=\small] {Stress $\sigma$};
+    % Stress-strain curve
+    \draw[diagramPrimary, thick] (0,0) -- (1,2);  % Linear elastic
+    \draw[diagramPrimary, thick] (1,2) .. controls (1.5,2.5) and (2,2.8) .. (3,3);  % Yield transition
+    \draw[diagramPrimary, thick] (3,3) .. controls (4,3.3) and (4.5,3.4) .. (5,3.2);  % Strain hardening
+    \draw[diagramError, thick, dashed] (5,3.2) -- (5.3,2.5);  % Necking/failure
+    % Yield point marker
+    \fill[diagramWarning] (1,2) circle (4pt);
+    \node[font=\scriptsize, anchor=south east] at (0.9,2.1) {#1};
+    % Ultimate point marker
+    \fill[diagramError] (5,3.2) circle (4pt);
+    \node[font=\scriptsize, anchor=south west] at (5.1,3.3) {#2};
+    % Elastic modulus annotation
+    \draw[thin, dashed, diagramNeutral] (0,0) -- (1.5,3);
+    \node[font=\tiny, text=diagramTextMuted, rotate=63] at (0.5,1.2) {$E$};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% STRESS-STRAIN CURVE (Dark Theme)
+% ============================================================================
+\newcommand{\stressstraindark}[2]{%
+\begin{center}
+\begin{tikzpicture}
+    \draw[-{Stealth[length=3mm]}, line width=1pt, color=diagramDarkBorder] (0,0) -- (6,0)
+        node[right, font=\small, text=diagramDarkText] {Strain $\varepsilon$};
+    \draw[-{Stealth[length=3mm]}, line width=1pt, color=diagramDarkBorder] (0,0) -- (0,4)
+        node[above, font=\small, text=diagramDarkText] {Stress $\sigma$};
+    \draw[diagramDarkPrimary, thick] (0,0) -- (1,2);
+    \draw[diagramDarkPrimary, thick] (1,2) .. controls (1.5,2.5) and (2,2.8) .. (3,3);
+    \draw[diagramDarkPrimary, thick] (3,3) .. controls (4,3.3) and (4.5,3.4) .. (5,3.2);
+    \draw[diagramDarkError, thick, dashed] (5,3.2) -- (5.3,2.5);
+    \fill[diagramDarkWarning] (1,2) circle (4pt);
+    \node[font=\scriptsize, text=diagramDarkText, anchor=south east] at (0.9,2.1) {#1};
+    \fill[diagramDarkError] (5,3.2) circle (4pt);
+    \node[font=\scriptsize, text=diagramDarkText, anchor=south west] at (5.1,3.3) {#2};
+    \draw[thin, dashed, diagramDarkBorder] (0,0) -- (1.5,3);
+    \node[font=\tiny, text=diagramDarkTextMuted, rotate=63] at (0.5,1.2) {$E$};
+\end{tikzpicture}
+\end{center}
+}

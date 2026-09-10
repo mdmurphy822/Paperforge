@@ -1,0 +1,196 @@
+% timeline.tex - Timeline diagram macros for Paperforge
+% Requires: _colors.tex, _styles.tex loaded first
+%
+% Macros provided:
+%   \timelinethree{event1}{date1}{event2}{date2}{event3}{date3}
+%   \timelinefour{...}
+%   \milestonetimeline{...}
+%   \phasetimeline{phase1}{phase2}{phase3}
+%   \timelinevertical{...}
+%
+% Design: Horizontal base line with event markers above/below
+
+% ============================================================================
+% THREE-EVENT HORIZONTAL TIMELINE
+% ============================================================================
+% Usage: \timelinethree{Event 1}{Date 1}{Event 2}{Date 2}{Event 3}{Date 3}
+\newcommand{\timelinethree}[6]{%
+\begin{center}
+\begin{tikzpicture}
+    % Base line
+    \draw[diagram timeline] (0,0) -- (10,0);
+
+    % Event 1 (above)
+    \node[diagram event] (e1) at (1,0) {};
+    \node[above=0.3cm of e1, align=center, font=\small\bfseries] {#1};
+    \node[below=0.3cm of e1, align=center, font=\scriptsize, text=diagramTextMuted] {#2};
+
+    % Event 2 (below)
+    \node[diagram event] (e2) at (5,0) {};
+    \node[above=0.3cm of e2, align=center, font=\small\bfseries] {#3};
+    \node[below=0.3cm of e2, align=center, font=\scriptsize, text=diagramTextMuted] {#4};
+
+    % Event 3 (above)
+    \node[diagram event] (e3) at (9,0) {};
+    \node[above=0.3cm of e3, align=center, font=\small\bfseries] {#5};
+    \node[below=0.3cm of e3, align=center, font=\scriptsize, text=diagramTextMuted] {#6};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% FOUR-EVENT HORIZONTAL TIMELINE
+% ============================================================================
+% Usage: \timelinefour{E1}{D1}{E2}{D2}{E3}{D3}{E4}{D4}
+\newcommand{\timelinefour}[8]{%
+\begin{center}
+\begin{tikzpicture}
+    % Base line
+    \draw[diagram timeline] (0,0) -- (12,0);
+
+    % Event 1
+    \node[diagram event] (e1) at (1,0) {};
+    \node[above=0.3cm of e1, align=center, font=\small\bfseries] {#1};
+    \node[below=0.3cm of e1, align=center, font=\scriptsize, text=diagramTextMuted] {#2};
+
+    % Event 2
+    \node[diagram event] (e2) at (4.5,0) {};
+    \node[above=0.3cm of e2, align=center, font=\small\bfseries] {#3};
+    \node[below=0.3cm of e2, align=center, font=\scriptsize, text=diagramTextMuted] {#4};
+
+    % Event 3
+    \node[diagram event] (e3) at (8,0) {};
+    \node[above=0.3cm of e3, align=center, font=\small\bfseries] {#5};
+    \node[below=0.3cm of e3, align=center, font=\scriptsize, text=diagramTextMuted] {#6};
+
+    % Event 4
+    \node[diagram event] (e4) at (11.5,0) {};
+    \node[above=0.3cm of e4, align=center, font=\small\bfseries] {#7};
+    \node[below=0.3cm of e4, align=center, font=\scriptsize, text=diagramTextMuted] {#8};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% MILESTONE TIMELINE (with larger markers)
+% ============================================================================
+% Usage: \milestonetimeline{M1}{Date1}{M2}{Date2}{M3}{Date3}
+\newcommand{\milestonetimeline}[6]{%
+\begin{center}
+\begin{tikzpicture}
+    % Base line
+    \draw[diagram timeline] (0,0) -- (10,0);
+
+    % Milestone 1
+    \node[diagram milestone] (m1) at (1,0) {};
+    \node[above=0.4cm of m1, align=center, font=\small\bfseries, text=diagramPrimary] {#1};
+    \node[below=0.4cm of m1, align=center, font=\scriptsize, text=diagramTextMuted] {#2};
+
+    % Milestone 2
+    \node[diagram milestone] (m2) at (5,0) {};
+    \node[above=0.4cm of m2, align=center, font=\small\bfseries, text=diagramPrimary] {#3};
+    \node[below=0.4cm of m2, align=center, font=\scriptsize, text=diagramTextMuted] {#4};
+
+    % Milestone 3
+    \node[diagram milestone] (m3) at (9,0) {};
+    \node[above=0.4cm of m3, align=center, font=\small\bfseries, text=diagramPrimary] {#5};
+    \node[below=0.4cm of m3, align=center, font=\scriptsize, text=diagramTextMuted] {#6};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% PHASE TIMELINE (colored segments)
+% ============================================================================
+% Usage: \phasetimeline{Phase 1}{Phase 2}{Phase 3}
+\newcommand{\phasetimeline}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    % Phase 1
+    \node[diagram phase, fill=diagramPhase1, minimum width=3.5cm] (p1) at (0,0) {#1};
+    % Phase 2
+    \node[diagram phase, fill=diagramPhase2, minimum width=3.5cm, right=-0.5pt of p1] (p2) {#2};
+    % Phase 3
+    \node[diagram phase, fill=diagramPhase3, minimum width=3.5cm, right=-0.5pt of p2] (p3) {#3};
+
+    % Arrow indicators
+    \draw[diagram arrow primary] (p1.east) ++(0.1,0.4) -- ++(0.3,0);
+    \draw[diagram arrow primary] (p2.east) ++(0.1,0.4) -- ++(0.3,0);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% FOUR-PHASE TIMELINE
+% ============================================================================
+% Usage: \phasetimelinefour{Phase 1}{Phase 2}{Phase 3}{Phase 4}
+\newcommand{\phasetimelinefour}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Phase 1
+    \node[diagram phase, fill=diagramPhase1, minimum width=2.8cm] (p1) at (0,0) {#1};
+    % Phase 2
+    \node[diagram phase, fill=diagramPhase2, minimum width=2.8cm, right=-0.5pt of p1] (p2) {#2};
+    % Phase 3
+    \node[diagram phase, fill=diagramPhase3, minimum width=2.8cm, right=-0.5pt of p2] (p3) {#3};
+    % Phase 4
+    \node[diagram phase, fill=diagramPhase4, minimum width=2.8cm, right=-0.5pt of p3] (p4) {#4};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% VERTICAL TIMELINE
+% ============================================================================
+% Usage: \timelinevertical{Event1}{Date1}{Event2}{Date2}{Event3}{Date3}
+\newcommand{\timelinevertical}[6]{%
+\begin{center}
+\begin{tikzpicture}
+    % Vertical line
+    \draw[diagram timeline] (0,0) -- (0,-5);
+
+    % Event 1
+    \node[diagram event] (e1) at (0,0) {};
+    \node[right=0.5cm of e1, align=left, font=\small\bfseries] {#1};
+    \node[left=0.5cm of e1, align=right, font=\scriptsize, text=diagramTextMuted] {#2};
+
+    % Event 2
+    \node[diagram event] (e2) at (0,-2.5) {};
+    \node[right=0.5cm of e2, align=left, font=\small\bfseries] {#3};
+    \node[left=0.5cm of e2, align=right, font=\scriptsize, text=diagramTextMuted] {#4};
+
+    % Event 3
+    \node[diagram event] (e3) at (0,-5) {};
+    \node[right=0.5cm of e3, align=left, font=\small\bfseries] {#5};
+    \node[left=0.5cm of e3, align=right, font=\scriptsize, text=diagramTextMuted] {#6};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% DARK THEME TIMELINE
+% ============================================================================
+% Usage: \timelinedark{Event1}{Date1}{Event2}{Date2}{Event3}{Date3}
+\newcommand{\timelinedark}[6]{%
+\begin{center}
+\begin{tikzpicture}
+    % Base line
+    \draw[draw=diagramDarkBorder, line width=2pt] (0,0) -- (10,0);
+
+    % Event 1
+    \node[circle, fill=diagramDarkPrimary, minimum size=8pt, inner sep=0pt] (e1) at (1,0) {};
+    \node[above=0.3cm of e1, align=center, font=\small\bfseries, text=diagramDarkText] {#1};
+    \node[below=0.3cm of e1, align=center, font=\scriptsize, text=diagramDarkTextMuted] {#2};
+
+    % Event 2
+    \node[circle, fill=diagramDarkPrimary, minimum size=8pt, inner sep=0pt] (e2) at (5,0) {};
+    \node[above=0.3cm of e2, align=center, font=\small\bfseries, text=diagramDarkText] {#3};
+    \node[below=0.3cm of e2, align=center, font=\scriptsize, text=diagramDarkTextMuted] {#4};
+
+    % Event 3
+    \node[circle, fill=diagramDarkPrimary, minimum size=8pt, inner sep=0pt] (e3) at (9,0) {};
+    \node[above=0.3cm of e3, align=center, font=\small\bfseries, text=diagramDarkText] {#5};
+    \node[below=0.3cm of e3, align=center, font=\scriptsize, text=diagramDarkTextMuted] {#6};
+\end{tikzpicture}
+\end{center}
+}

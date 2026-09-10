@@ -1,0 +1,242 @@
+% data_callout.tex - Data visualization and KPI callout macros for Paperforge
+% Requires: _colors.tex, _styles.tex loaded first
+%
+% Macros provided:
+%   \herostat{number}{label}                    - Large statistic display
+%   \herostatunit{number}{unit}{label}          - Stat with unit
+%   \kpicard{title}{value}{trend}{trendvalue}   - KPI with trend indicator
+%   \kpirow{kpi1}{kpi2}{kpi3}                   - Row of 3 KPIs
+%   \progressbar{percent}{label}                - Progress bar
+%   \statcompare{label1}{val1}{label2}{val2}    - Two-stat comparison
+%
+% Trend indicators: Up (green), Down (red), Stable (gray)
+
+% ============================================================================
+% HERO STATISTIC
+% ============================================================================
+% Usage: \herostat{42\%}{Conversion Rate}
+\newcommand{\herostat}[2]{%
+\begin{center}
+\begin{tikzpicture}
+    \node[align=center] {%
+        {\fontsize{48}{52}\selectfont\bfseries\color{diagramPrimary} #1}\\[8pt]
+        {\small\color{diagramTextMuted} #2}
+    };
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% HERO STATISTIC WITH UNIT
+% ============================================================================
+% Usage: \herostatunit{3.2}{M}{Active Users}
+\newcommand{\herostatunit}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    \node[align=center] {%
+        {\fontsize{48}{52}\selectfont\bfseries\color{diagramPrimary} #1}%
+        {\fontsize{24}{28}\selectfont\bfseries\color{diagramSecondary} #2}\\[8pt]
+        {\small\color{diagramTextMuted} #3}
+    };
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% KPI CARD WITH TREND
+% ============================================================================
+% Usage: \kpicard{Revenue}{$1.2M}{up}{+12\%}
+%        \kpicard{Churn}{5.2\%}{down}{-0.8\%}
+%        \kpicard{Users}{10K}{stable}{0\%}
+\newcommand{\kpicard}[4]{%
+\begin{tikzpicture}
+    \node[diagram card, minimum width=4cm, minimum height=2.5cm, align=center] {%
+        {\scriptsize\color{diagramTextMuted}\MakeUppercase{#1}}\\[4pt]
+        {\Large\bfseries #2}\\[4pt]
+        \ifnum\pdfstrcmp{#3}{up}=0
+            {\color{diagramSuccess}$\blacktriangle$ #4}%
+        \else\ifnum\pdfstrcmp{#3}{down}=0
+            {\color{diagramError}$\blacktriangledown$ #4}%
+        \else
+            {\color{diagramNeutral}$-$ #4}%
+        \fi\fi
+    };
+\end{tikzpicture}%
+}
+
+% ============================================================================
+% KPI ROW (3 KPIs side by side)
+% ============================================================================
+% Usage: \kpirow{Title1}{Val1}{trend1}{chg1}{Title2}{Val2}{trend2}{chg2}{Title3}{Val3}{trend3}{chg3}
+\newcommand{\kpirow}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % KPI 1
+    \node[diagram card, minimum width=3.5cm, minimum height=2.2cm] (k1) at (0, 0) {%
+        #1
+    };
+    % KPI 2
+    \node[diagram card, minimum width=3.5cm, minimum height=2.2cm] (k2) at (4.1, 0) {%
+        #2
+    };
+    % KPI 3
+    \node[diagram card, minimum width=3.5cm, minimum height=2.2cm] (k3) at (8.2, 0) {%
+        #3
+    };
+    % KPI 4 (optional, if provided)
+    \ifx&#4&\else
+    \node[diagram card, minimum width=3.5cm, minimum height=2.2cm] (k4) at (12.3, 0) {%
+        #4
+    };
+    \fi
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% PROGRESS BAR
+% ============================================================================
+% Usage: \progressbar{75}{Project Completion}
+\newcommand{\progressbar}[2]{%
+\begin{center}
+\begin{tikzpicture}
+    % Label
+    \node[anchor=west, font=\small] at (0, 0.6) {#2};
+    % Percentage
+    \node[anchor=east, font=\small\bfseries, text=diagramPrimary] at (8, 0.6) {#1\%};
+    % Background bar
+    \fill[diagramSurfaceAlt, rounded corners=3pt] (0, 0) rectangle (8, 0.35);
+    % Fill bar (calculate width based on percentage)
+    \pgfmathsetmacro{\fillwidth}{8 * #1 / 100}
+    \fill[diagramPrimary, rounded corners=3pt] (0, 0) rectangle (\fillwidth, 0.35);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% STACKED PROGRESS BARS (3 bars)
+% ============================================================================
+% Usage: \progressstack{Label1}{Val1}{Label2}{Val2}{Label3}{Val3}
+\newcommand{\progressstack}[6]{%
+\begin{center}
+\begin{tikzpicture}
+    % Bar 1
+    \node[anchor=west, font=\small] at (0, 2.2) {#1};
+    \node[anchor=east, font=\small\bfseries, text=diagramPrimary] at (8, 2.2) {#2\%};
+    \fill[diagramSurfaceAlt, rounded corners=3pt] (0, 1.7) rectangle (8, 2.0);
+    \pgfmathsetmacro{\fillA}{8 * #2 / 100}
+    \fill[diagramPhase1, rounded corners=3pt] (0, 1.7) rectangle (\fillA, 2.0);
+
+    % Bar 2
+    \node[anchor=west, font=\small] at (0, 1.1) {#3};
+    \node[anchor=east, font=\small\bfseries, text=diagramPrimary] at (8, 1.1) {#4\%};
+    \fill[diagramSurfaceAlt, rounded corners=3pt] (0, 0.6) rectangle (8, 0.9);
+    \pgfmathsetmacro{\fillB}{8 * #4 / 100}
+    \fill[diagramPhase2, rounded corners=3pt] (0, 0.6) rectangle (\fillB, 0.9);
+
+    % Bar 3
+    \node[anchor=west, font=\small] at (0, 0) {#5};
+    \node[anchor=east, font=\small\bfseries, text=diagramPrimary] at (8, 0) {#6\%};
+    \fill[diagramSurfaceAlt, rounded corners=3pt] (0, -0.5) rectangle (8, -0.2);
+    \pgfmathsetmacro{\fillC}{8 * #6 / 100}
+    \fill[diagramPhase3, rounded corners=3pt] (0, -0.5) rectangle (\fillC, -0.2);
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% TWO-STAT COMPARISON
+% ============================================================================
+% Usage: \statcompare{Before}{150}{After}{320}
+\newcommand{\statcompare}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Left stat
+    \node[align=center] (left) at (0, 0) {%
+        {\small\color{diagramTextMuted} #1}\\[4pt]
+        {\fontsize{32}{36}\selectfont\bfseries\color{diagramNeutral} #2}
+    };
+    % Arrow
+    \node at (3, 0) {\Huge\color{diagramSuccess}$\rightarrow$};
+    % Right stat
+    \node[align=center] (right) at (6, 0) {%
+        {\small\color{diagramTextMuted} #3}\\[4pt]
+        {\fontsize{32}{36}\selectfont\bfseries\color{diagramSuccess} #4}
+    };
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% METRIC BADGE (inline)
+% ============================================================================
+% Usage: \metricbadge{+12\%}{success} or \metricbadge{-5\%}{error}
+\newcommand{\metricbadge}[2]{%
+\tikz[baseline=-0.5ex]{
+    \ifnum\pdfstrcmp{#2}{success}=0
+        \node[rounded corners=3pt, fill=diagramSuccess!15, text=diagramSuccess,
+              inner sep=3pt, font=\scriptsize\bfseries] {#1};
+    \else\ifnum\pdfstrcmp{#2}{error}=0
+        \node[rounded corners=3pt, fill=diagramError!15, text=diagramError,
+              inner sep=3pt, font=\scriptsize\bfseries] {#1};
+    \else
+        \node[rounded corners=3pt, fill=diagramNeutral!15, text=diagramNeutral,
+              inner sep=3pt, font=\scriptsize\bfseries] {#1};
+    \fi\fi
+}%
+}
+
+% ============================================================================
+% GAUGE/DIAL (semi-circular)
+% ============================================================================
+% Usage: \gauge{75}{Performance Score}
+\newcommand{\gauge}[2]{%
+\begin{center}
+\begin{tikzpicture}
+    % Background arc
+    \draw[diagramSurfaceAlt, line width=8pt] (-2.5, 0) arc (180:0:2.5);
+    % Filled arc (calculate angle based on percentage)
+    \pgfmathsetmacro{\endangle}{180 - (#1 * 1.8)}
+    \draw[diagramPrimary, line width=8pt, line cap=round] (-2.5, 0) arc (180:\endangle:2.5);
+    % Center value
+    \node at (0, 0.5) {\fontsize{28}{32}\selectfont\bfseries\color{diagramPrimary} #1\%};
+    % Label
+    \node at (0, -0.5) {\small\color{diagramTextMuted} #2};
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% DARK THEME HERO STAT
+% ============================================================================
+% Usage: \herostatdark{85\%}{Accuracy}
+\newcommand{\herostatdark}[2]{%
+\begin{center}
+\begin{tikzpicture}
+    \node[align=center] {%
+        {\fontsize{48}{52}\selectfont\bfseries\color{diagramDarkPrimary} #1}\\[8pt]
+        {\small\color{diagramDarkTextMuted} #2}
+    };
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% DARK THEME PROGRESS BAR
+% ============================================================================
+% Usage: \progressbardark{60}{Loading}
+\newcommand{\progressbardark}[2]{%
+\begin{center}
+\begin{tikzpicture}
+    % Label
+    \node[anchor=west, font=\small, text=diagramDarkText] at (0, 0.6) {#2};
+    % Percentage
+    \node[anchor=east, font=\small\bfseries, text=diagramDarkPrimary] at (8, 0.6) {#1\%};
+    % Background bar
+    \fill[diagramDarkSurface, rounded corners=3pt] (0, 0) rectangle (8, 0.35);
+    % Fill bar
+    \pgfmathsetmacro{\fillwidth}{8 * #1 / 100}
+    \fill[diagramDarkPrimary, rounded corners=3pt] (0, 0) rectangle (\fillwidth, 0.35);
+\end{tikzpicture}
+\end{center}
+}

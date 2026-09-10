@@ -1,0 +1,245 @@
+% bento_grid.tex - Bento grid card layout macros for Paperforge
+% Requires: _colors.tex, _styles.tex loaded first
+%
+% Macros provided:
+%   \bentogrid{card1}{card2}{card3}{card4}     - 2x2 grid
+%   \bentohero{hero}{c1}{c2}{c3}{c4}           - Hero + 4 small
+%   \bentosix{c1}{c2}{c3}{c4}{c5}{c6}          - 2x3 grid
+%   \cardstack{title1}{content1}{...}          - Vertical card stack
+%
+% Design: 6mm gaps, 6pt border radius, optional shadows
+
+% ============================================================================
+% 2x2 BENTO GRID
+% ============================================================================
+% Usage: \bentogrid{Card 1}{Card 2}{Card 3}{Card 4}
+\newcommand{\bentogrid}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Card 1 (top left)
+    \node[diagram card, minimum width=4.5cm, minimum height=2.5cm] (c1) at (0, 0) {%
+        \begin{minipage}{4cm}
+        #1
+        \end{minipage}
+    };
+    % Card 2 (top right)
+    \node[diagram card, minimum width=4.5cm, minimum height=2.5cm] (c2) at (5.1, 0) {%
+        \begin{minipage}{4cm}
+        #2
+        \end{minipage}
+    };
+    % Card 3 (bottom left)
+    \node[diagram card, minimum width=4.5cm, minimum height=2.5cm] (c3) at (0, -3.1) {%
+        \begin{minipage}{4cm}
+        #3
+        \end{minipage}
+    };
+    % Card 4 (bottom right)
+    \node[diagram card, minimum width=4.5cm, minimum height=2.5cm] (c4) at (5.1, -3.1) {%
+        \begin{minipage}{4cm}
+        #4
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% HERO + 4 BENTO GRID
+% ============================================================================
+% Usage: \bentohero{Hero Content}{Card1}{Card2}{Card3}{Card4}
+\newcommand{\bentohero}[5]{%
+\begin{center}
+\begin{tikzpicture}
+    % Hero card (large, left side)
+    \node[diagram card hero, minimum width=5cm, minimum height=5.2cm] (hero) at (0, -1.25) {%
+        \begin{minipage}{4.5cm}
+        #1
+        \end{minipage}
+    };
+    % Card 1 (top right, row 1)
+    \node[diagram card, minimum width=4.5cm, minimum height=2.3cm] (c1) at (5.4, 0) {%
+        \begin{minipage}{4cm}
+        \small #2
+        \end{minipage}
+    };
+    % Card 2 (top right, row 1)
+    \node[diagram card, minimum width=4.5cm, minimum height=2.3cm] (c2) at (10.2, 0) {%
+        \begin{minipage}{4cm}
+        \small #3
+        \end{minipage}
+    };
+    % Card 3 (bottom right, row 2)
+    \node[diagram card, minimum width=4.5cm, minimum height=2.3cm] (c3) at (5.4, -2.9) {%
+        \begin{minipage}{4cm}
+        \small #4
+        \end{minipage}
+    };
+    % Card 4 (bottom right, row 2)
+    \node[diagram card, minimum width=4.5cm, minimum height=2.3cm] (c4) at (10.2, -2.9) {%
+        \begin{minipage}{4cm}
+        \small #5
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% 2x3 BENTO GRID
+% ============================================================================
+% Usage: \bentosix{C1}{C2}{C3}{C4}{C5}{C6}
+\newcommand{\bentosix}[6]{%
+\begin{center}
+\begin{tikzpicture}
+    % Row 1
+    \node[diagram card, minimum width=3.5cm, minimum height=2cm] (c1) at (0, 0) {%
+        \begin{minipage}{3cm}
+        \small #1
+        \end{minipage}
+    };
+    \node[diagram card, minimum width=3.5cm, minimum height=2cm] (c2) at (4.1, 0) {%
+        \begin{minipage}{3cm}
+        \small #2
+        \end{minipage}
+    };
+    \node[diagram card, minimum width=3.5cm, minimum height=2cm] (c3) at (8.2, 0) {%
+        \begin{minipage}{3cm}
+        \small #3
+        \end{minipage}
+    };
+    % Row 2
+    \node[diagram card, minimum width=3.5cm, minimum height=2cm] (c4) at (0, -2.6) {%
+        \begin{minipage}{3cm}
+        \small #4
+        \end{minipage}
+    };
+    \node[diagram card, minimum width=3.5cm, minimum height=2cm] (c5) at (4.1, -2.6) {%
+        \begin{minipage}{3cm}
+        \small #5
+        \end{minipage}
+    };
+    \node[diagram card, minimum width=3.5cm, minimum height=2cm] (c6) at (8.2, -2.6) {%
+        \begin{minipage}{3cm}
+        \small #6
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% VERTICAL CARD STACK (3 cards)
+% ============================================================================
+% Usage: \cardstack{Title1}{Content1}{Title2}{Content2}{Title3}{Content3}
+\newcommand{\cardstack}[6]{%
+\begin{center}
+\begin{tikzpicture}
+    % Card 1
+    \node[diagram card, minimum width=8cm, minimum height=1.8cm] (c1) at (0, 0) {%
+        \textbf{#1}\\[2pt]
+        \begin{minipage}{7.5cm}
+        \small #2
+        \end{minipage}
+    };
+    % Card 2
+    \node[diagram card, minimum width=8cm, minimum height=1.8cm] (c2) at (0, -2.4) {%
+        \textbf{#3}\\[2pt]
+        \begin{minipage}{7.5cm}
+        \small #4
+        \end{minipage}
+    };
+    % Card 3
+    \node[diagram card, minimum width=8cm, minimum height=1.8cm] (c3) at (0, -4.8) {%
+        \textbf{#5}\\[2pt]
+        \begin{minipage}{7.5cm}
+        \small #6
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% ICON CARD GRID (with placeholder for icons)
+% ============================================================================
+% Usage: \icongrid{Icon1}{Title1}{Icon2}{Title2}{Icon3}{Title3}{Icon4}{Title4}
+\newcommand{\icongrid}[8]{%
+\begin{center}
+\begin{tikzpicture}
+    % Card 1
+    \node[diagram card, minimum width=4cm, minimum height=3cm] (c1) at (0, 0) {%
+        {\Large #1}\\[6pt]
+        \textbf{#2}
+    };
+    % Card 2
+    \node[diagram card, minimum width=4cm, minimum height=3cm] (c2) at (4.6, 0) {%
+        {\Large #3}\\[6pt]
+        \textbf{#4}
+    };
+    % Card 3
+    \node[diagram card, minimum width=4cm, minimum height=3cm] (c3) at (0, -3.6) {%
+        {\Large #5}\\[6pt]
+        \textbf{#6}
+    };
+    % Card 4
+    \node[diagram card, minimum width=4cm, minimum height=3cm] (c4) at (4.6, -3.6) {%
+        {\Large #7}\\[6pt]
+        \textbf{#8}
+    };
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% DARK THEME 2x2 GRID
+% ============================================================================
+% Usage: \bentogriddark{Card1}{Card2}{Card3}{Card4}
+\newcommand{\bentogriddark}[4]{%
+\begin{center}
+\begin{tikzpicture}
+    % Card 1
+    \node[diagram card dark, minimum width=4.5cm, minimum height=2.5cm] (c1) at (0, 0) {%
+        \begin{minipage}{4cm}
+        #1
+        \end{minipage}
+    };
+    % Card 2
+    \node[diagram card dark, minimum width=4.5cm, minimum height=2.5cm] (c2) at (5.1, 0) {%
+        \begin{minipage}{4cm}
+        #2
+        \end{minipage}
+    };
+    % Card 3
+    \node[diagram card dark, minimum width=4.5cm, minimum height=2.5cm] (c3) at (0, -3.1) {%
+        \begin{minipage}{4cm}
+        #3
+        \end{minipage}
+    };
+    % Card 4
+    \node[diagram card dark, minimum width=4.5cm, minimum height=2.5cm] (c4) at (5.1, -3.1) {%
+        \begin{minipage}{4cm}
+        #4
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{center}
+}
+
+% ============================================================================
+% FEATURE HIGHLIGHT CARD
+% ============================================================================
+% Usage: \featurecard{Title}{Description}{Highlight Value}
+\newcommand{\featurecard}[3]{%
+\begin{center}
+\begin{tikzpicture}
+    \node[diagram card hero, minimum width=10cm, minimum height=3cm] (card) {%
+        \begin{minipage}{9cm}
+        {\large\bfseries #1}\\[6pt]
+        #2\\[8pt]
+        {\color{diagramPrimary}\Large\bfseries #3}
+        \end{minipage}
+    };
+\end{tikzpicture}
+\end{center}
+}
